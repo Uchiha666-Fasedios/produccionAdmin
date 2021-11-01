@@ -4,7 +4,7 @@ var express = require('express'); //cargo el modulo para poder tener el objeto y
 var app = express();
 var bodyParser = require('body-parser'); //cargo el modulo para tener esta libreria para combertir en json lo q me llega por post etc..
 var mongoose = require('mongoose'); //cargo este modulo esta libreria
-var port = process.env.PORT || 4201; //el puerto de mi local host va ser process.env.PORT si no por defecto le ponemos 4201
+var port = process.env.PORT || 4204; //el puerto de mi local host va ser process.env.PORT si no por defecto le ponemos 4201
 //mongoose.set('useFindAndModify', false);//para q no me tire error cuando use findByIdAndUpdate o 
 
 //CONFIGURAR SOCKET se instalo un paqete para el uso de este socket clase 58 carrito de compras asincrono
