@@ -14,6 +14,8 @@ var io =require('socket.io')(server,{
     cors: {origin : '*'}//q las cabeceras sean de cualqier url
 });
 
+var path = require('path');
+
 //uso del socket (acciones)
 io.on('connection',function(socket){//conecto el paqete 
     socket.on('delete-carrito',function(data){//arranco el paqete donde le doy nombre de delete-carrito y obtengo la data de dicha accion
