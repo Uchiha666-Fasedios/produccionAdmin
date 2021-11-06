@@ -32,7 +32,7 @@ const actualiza_config_admin = async function(req,res){
         
                
             
-                let reg = await Config.findByIdAndUpdate({_id:"60aac901eadf8212e476d2da"},{
+                let reg = await Config.findByIdAndUpdate({_id:"6133c21c909f8e22b8ec6adc"},{
                     categorias: JSON.parse(data.categorias),
                     titulo: data.titulo,
                     serie: data.serie,
