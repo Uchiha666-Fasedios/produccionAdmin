@@ -119,7 +119,7 @@ fs.stat('./uploads/configuraciones/'+img,function(err){
 
 
 
-const obtener_config_public = async function(req, res){//async define una función asíncrona,
+const obtener_config_publico = async function(req, res){//async define una función asíncrona,
 
     var reg  = await Config.findById({_id:'6133c21c909f8e22b8ec6adc'});//findById busco por id
                 res.status(200).send({data:reg});  
@@ -134,5 +134,5 @@ module.exports = {
     actualiza_config_admin,
     obtener_config_admin,
     obtener_logo,
-    obtener_config_public
+    obtener_config_publico
     }; //para poder importarlo con un reqired

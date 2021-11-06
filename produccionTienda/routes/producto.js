@@ -28,12 +28,12 @@ router.delete('/eliminar_inventario_producto_admin/:id',auth.auth, productoContr
 router.post('/registro_inventario_producto_admin',auth.auth, productoController.registro_inventario_producto_admin);//parametros filtro seria opcional, auth.auth el parametro del token
 
 //PUBLICOS
-router.get('/listar_productos_public/:filtro?', productoController.listar_productos_public);//parametros filtro? seria opcional, auth.auth el parametro del token
-router.get('/obtener_productos_slug_public/:slug', productoController.obtener_productos_slug_public);//, auth.auth el parametro del token
-router.get('/listar_productos_recomendados_public/:categoria', productoController.listar_productos_recomendados_public);// auth.auth el parametro del token
-router.get('/listar_productos_nuevos_public', productoController.listar_productos_nuevos_public);
-router.get('/listar_productos_masvendidos_public', productoController.listar_productos_masvendidos_public);
-router.get('/obtener_reviews_producto_public/:id', productoController.obtener_reviews_producto_public);
+router.get('/listar_productos_publico/:filtro?', productoController.listar_productos_publico);//parametros filtro? seria opcional, auth.auth el parametro del token
+router.get('/obtener_productos_slug_publico/:slug', productoController.obtener_productos_slug_publico);//, auth.auth el parametro del token
+router.get('/listar_productos_recomendados_publico/:categoria', productoController.listar_productos_recomendados_publico);// auth.auth el parametro del token
+router.get('/listar_productos_nuevos_publico', productoController.listar_productos_nuevos_publico);
+router.get('/listar_productos_masvendidos_publico', productoController.listar_productos_masvendidos_publico);
+router.get('/obtener_reviews_producto_publico/:id', productoController.obtener_reviews_producto_publico);
 
 
 module.exports = router; //para poder importarlo con un reqired

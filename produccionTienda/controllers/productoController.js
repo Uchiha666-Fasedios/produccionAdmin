@@ -407,7 +407,7 @@ res.status(500).send({message:'NoAccess'});
 }
 
 //METODOS PUBLICOS
-const listar_productos_public = async function(req, res){//async define una función asíncrona,
+const listar_productos_publico = async function(req, res){//async define una función asíncrona,
                         //let tipo=req.params['tipo'];
                 let filtro=req.params['filtro'];
                 let reg = await Producto.find({titulo:new RegExp(filtro,'i')}).sort({createdAt:-1});//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
@@ -416,7 +416,7 @@ const listar_productos_public = async function(req, res){//async define una func
 }
 
 
-const obtener_productos_slug_public = async function(req, res){//async define una función asíncrona,
+const obtener_productos_slug_publico = async function(req, res){//async define una función asíncrona,
                         
                 let slug=req.params['slug'];
                 let reg = await Producto.findOne({slug:slug});//findOne recibe un objeto que será usado para buscar coincidencias, como lo haces con find
@@ -425,7 +425,7 @@ const obtener_productos_slug_public = async function(req, res){//async define un
 }
 
 
-const listar_productos_recomendados_public = async function(req, res){//async define una función asíncrona,
+const listar_productos_recomendados_publico = async function(req, res){//async define una función asíncrona,
                         //let tipo=req.params['tipo'];
                 let categoria=req.params['categoria'];
                 let reg = await Producto.find({categoria:new RegExp(categoria,'i')}).sort({createdAt:-1}).limit(8);//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
@@ -433,14 +433,14 @@ const listar_productos_recomendados_public = async function(req, res){//async de
 
 }
 
-const listar_productos_nuevos_public = async function(req, res){//async define una función asíncrona,
+const listar_productos_nuevos_publico = async function(req, res){//async define una función asíncrona,
                        
                 let reg = await Producto.find().sort({createdAt:-1}).limit(8);//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
                res.status(200).send({data:reg});
 
 }
 
-const listar_productos_masvendidos_public = async function(req, res){//async define una función asíncrona,
+const listar_productos_masvendidos_publico = async function(req, res){//async define una función asíncrona,
                        
                 let reg = await Producto.find().sort({nventas:-1}).limit(8);//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
                res.status(200).send({data:reg});
@@ -448,7 +448,7 @@ const listar_productos_masvendidos_public = async function(req, res){//async def
 }
 
 
-const obtener_reviews_producto_public = async function(req, res){//async define una función asíncrona,
+const obtener_reviews_producto_publico = async function(req, res){//async define una función asíncrona,
                        let id=req.params['id'];
                 let reg = await Review.find({producto:id}).populate('cliente').sort({createdAt:-1});//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
                res.status(200).send({data:reg});
@@ -472,10 +472,10 @@ module.exports = {
     actualizar_producto_variedades_admin,
     agregar_imagen_galeria_admin,
     eliminar_imagen_galeria_admin,
-    listar_productos_public,
-    obtener_productos_slug_public,
-    listar_productos_recomendados_public,
-    listar_productos_nuevos_public,
-    listar_productos_masvendidos_public,
-    obtener_reviews_producto_public 
+    listar_productos_publico,
+    obtener_productos_slug_publico,
+    listar_productos_recomendados_publico,
+    listar_productos_nuevos_publico,
+    listar_productos_masvendidos_publico,
+    obtener_reviews_producto_publico 
     }; //para poder importarlo con un reqired
