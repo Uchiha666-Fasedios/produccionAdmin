@@ -7,6 +7,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+  
   <link rel="mask-icon" color="#5bbad5" href="assets/img/safari-pinned-tab.svg">
   <meta name="msapplication-TileColor" content="#766df4">
   <meta name="theme-color" content="#ffffff">
@@ -25,8 +26,6 @@
   <!--oooooooooooooooooooooooooooooooooooooo-->
 
 
-
-  
     <!-- Page loading styles-->
     <style>
       .pagination{
@@ -188,11 +187,16 @@
 
 </main>
 
-    <!-- Back to top button-->
-    <a class="btn-scroll-top" href="#top" data-scroll="" data-fixed-element="">
-      <span class="btn-scroll-top-tooltip text-muted font-size-sm mr-2">Top</span>
-      <i class="btn-scroll-top-icon cxi-angle-up"></i>
-    </a>
+   
+
+
+     <!-- Back to top button-->
+  <a *ngif="!title" class="btn-scroll-top" href="#top" data-scroll="" data-fixed-element="">
+    <span class="btn-scroll-top-tooltip text-muted font-size-sm mr-2">Top</span>
+    <i class="btn-scroll-top-icon cxi-angle-up"></i>
+  </a>
+
+   
 
 
     <!-- Vendor scripts: js libraries and plugins-->
@@ -200,6 +204,7 @@
     <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
     <script src="assets/vendor/tiny-slider/dist/min/tiny-slider.js"></script>
+   
     <!--agregados-->
     
     <script src="assets/js/nouislider.min.js"></script>
@@ -215,10 +220,10 @@
     <script src="assets/js/sticky-sidebar.min.js"></script>
     <!--para q me ande paypal-->
     <script src="https://www.paypal.com/sdk/js?client-id=AWLhkn-l-td_uvyYw3IHIDcS6xAiYKatZSo4QOSxEpHKcmIEcbC4jjLEfCK1-puBhPKjkwBKU_moIWJK"></script><!--AWLhkn-l-td_uvyYw3IHIDcS6xAiYKatZSo4QOSxEpHKcmIEcbC4jjLEfCK1-puBhPKjkwBKU_moIWJK es el Client ID de mi Platform Partner App q cree en paypal-->
-      
-   
-   
 
-<script src="runtime.3079918ecb66c28b225f.js" defer></script><script src="polyfills.35c3539630f8fd0436fe.js" defer></script><script src="main.0a6141c817a97c1a4116.js" defer></script>
+    <!-- NOTE: prior to v2.2.1 tiny-slider.js need to be in <body> -->
+    
+  
+<script src="runtime.3079918ecb66c28b225f.js" defer></script><script src="polyfills.35c3539630f8fd0436fe.js" defer></script><script src="main.25f14ffde3a3daffcb01.js" defer></script>
 
 </body></html>
