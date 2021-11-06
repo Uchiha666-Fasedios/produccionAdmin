@@ -1,19 +1,18 @@
 'use strict'
 
-
-var jwt=require('jwt-simple');
-var moment=require('moment');
-var secret='123456789';
+var jwt = require('jwt-simple');
+var moment = require('moment');
+var secret = 'diegoararca';
 
 exports.createToken = function(user){
-    var payload={
+    var payload = {
         sub: user._id,
         nombres: user.nombres,
         apellidos: user.apellidos,
         email: user.email,
         role: user.rol,
-        iat: moment().unix(), //la fecha q se creo el token
-        exp: moment().add(7,'days').unix() //fecha de expiracion
+        iat: moment().unix(),
+        exp: moment().add(7,'days').unix()
     }
 
     return jwt.encode(payload,secret);

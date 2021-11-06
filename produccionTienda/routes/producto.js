@@ -1,39 +1,37 @@
 'use strict'
 
-var express = require('express'); //trabajar con express para poder crear las rutas 
-var productoController = require('../controllers/productoController'); //cargo el cotrolador
+var express = require('express');
+var productoController = require('../controllers/productoController');
 
-var router = express.Router(); //cargo este servicio q tiene un monton de metodos para el tema de rutas
-var auth=require('../middlewares/authenticate');
-
-
-var multipart = require('connect-multiparty'); //trabajo con esto 'connect-multiparty' es un paqete q instale igual q express para q me reconozca los archivos las imagenes ..
-var path = multipart({ uploadDir: './uploads/productos' }); //aca llamo a la funcion y le indico donde se van a subir los archivos..uploadDir como propiedad y aca se guardan ./uploads
+var api = express.Router();
+var auth = require('../middlewares/authenticate');
+var multiparty = require('connect-multiparty');
+var path = multiparty({uploadDir: './uploads/productos'});
 
 //PRODUCTOS
-router.post('/registro_producto_admin',[auth.auth,path], productoController.registro_producto_admin);//parametros path viene con la instancia del formulario y los valores y el archivo, auth.auth el parametro del token
-router.get('/listar_productos_admin/:filtro?',auth.auth, productoController.listar_productos_admin);//parametros filtro? seria opcional, auth.auth el parametro del token
-router.get('/obtener_portada/:img', productoController.obtener_portada);
-router.get('/obtener_producto_admin/:id',auth.auth, productoController.obtener_producto_admin);//parametros filtro seria opcional, auth.auth el parametro del token
-router.put('/actualizar_producto_admin/:id',[auth.auth,path], productoController.actualizar_producto_admin);//parametros filtro seria opcional, auth.auth el parametro del token
-router.delete('/eliminar_producto_admin/:id',auth.auth, productoController.eliminar_producto_admin);//parametros filtro seria opcional, auth.auth el parametro del token
-router.put('/actualizar_producto_variedades_admin/:id',auth.auth, productoController.actualizar_producto_variedades_admin);//parametros filtro seria opcional, auth.auth el parametro del token
-router.put('/agregar_imagen_galeria_admin/:id',[auth.auth,path], productoController.agregar_imagen_galeria_admin);//parametros path viene con la instancia del formulario y los valores y el archivo, auth.auth el parametro del token
-router.put('/eliminar_imagen_galeria_admin/:id',auth.auth, productoController.eliminar_imagen_galeria_admin);//parametros filtro seria opcional, auth.auth el parametro del token
+api.post('/registro_producto_admin',[auth.auth,path],productoController.registro_producto_admin);
+api.get('/listar_productos_admin/:filtro?',auth.auth, productoController.listar_productos_admin);
+api.get('/obtener_portada/:img',productoController.obtener_portada);
+api.get('/obtener_producto_admin/:id',auth.auth,productoController.obtener_producto_admin);
+api.put('/actualizar_producto_admin/:id',[auth.auth,path], productoController.actualizar_producto_admin);
+api.delete('/eliminar_producto_admin/:id',auth.auth,productoController.eliminar_producto_admin);
+api.put('/actualizar_producto_variedades_admin/:id',auth.auth,productoController.actualizar_producto_variedades_admin);
+api.put('/agregar_imagen_galeria_admin/:id',[auth.auth,path],productoController.agregar_imagen_galeria_admin);
+api.put('/eliminar_imagen_galeria_admin/:id',auth.auth,productoController.eliminar_imagen_galeria_admin);
 
 
 //INVENTARIO
-router.get('/listar_inventario_producto_admin/:id',auth.auth, productoController.listar_inventario_producto_admin);//parametros filtro seria opcional, auth.auth el parametro del token
-router.delete('/eliminar_inventario_producto_admin/:id',auth.auth, productoController.eliminar_inventario_producto_admin);//parametros filtro seria opcional, auth.auth el parametro del token
-router.post('/registro_inventario_producto_admin',auth.auth, productoController.registro_inventario_producto_admin);//parametros filtro seria opcional, auth.auth el parametro del token
+api.get('/listar_inventario_producto_admin/:id',auth.auth,productoController.listar_inventario_producto_admin);
+api.delete('/eliminar_inventario_producto_admin/:id',auth.auth,productoController.eliminar_inventario_producto_admin);
+api.post('/registro_inventario_producto_admin',auth.auth,productoController.registro_inventario_producto_admin);
 
 //PUBLICOS
-router.get('/listar_productos_publico/:filtro?', productoController.listar_productos_publico);//parametros filtro? seria opcional, auth.auth el parametro del token
-router.get('/obtener_productos_slug_publico/:slug', productoController.obtener_productos_slug_publico);//, auth.auth el parametro del token
-router.get('/listar_productos_recomendados_publico/:categoria', productoController.listar_productos_recomendados_publico);// auth.auth el parametro del token
-router.get('/listar_productos_nuevos_publico', productoController.listar_productos_nuevos_publico);
-router.get('/listar_productos_masvendidos_publico', productoController.listar_productos_masvendidos_publico);
-router.get('/obtener_reviews_producto_publico/:id', productoController.obtener_reviews_producto_publico);
+api.get('/listar_productos_publico/:filtro?',productoController.listar_productos_publico);
+api.get('/obtener_productos_slug_publico/:slug',productoController.obtener_productos_slug_publico);
+api.get('/listar_productos_recomendados_publico/:categoria',productoController.listar_productos_recomendados_publico);
 
+api.get('/listar_productos_nuevos_publico',productoController.listar_productos_nuevos_publico);
+api.get('/listar_productos_masvendidos_publico',productoController.listar_productos_masvendidos_publico);
+api.get('/obtener_reviews_producto_publico/:id',productoController.obtener_reviews_producto_publico);
 
-module.exports = router; //para poder importarlo con un reqired
+module.exports = api;
