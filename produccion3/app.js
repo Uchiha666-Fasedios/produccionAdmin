@@ -36,9 +36,6 @@ app.use('/api', article_routes); //app.use porque es un middlewares ...'/api' pa
 app.get('*', function(req,res, next){
 	res.sendFile(path.resolve('client/index.html'));
 });
-/*app.get('/probando',(req,res)=>{
-    console.log('hola puta');
-});*/
 
 // Exportar modulo (fichero actual)
 module.exports = app; //exporto app q tiene todo para poder importar e usarlo en otro lado
