@@ -30,38 +30,6 @@ app.use('/api', project_routes); //app.use porque es un middlewares ...'/api' pa
 app.get('*', function(req,res, next){
 	res.sendFile(path.resolve('client/index.html'));
 });
-//ejemplo
-/*app.get('/', (req, res) => { //el metodo get donde la url si escribo http://localhost:3700 me va mostrar
-    res.status(280).send( //req lo q le puedo estar enviando desde el cliente o la peticion q yo haga y res es la response q yo estoy enviando 
-        //status(280) q si es una respuesta exitosa send para enviar los datos
-        '<h1>pagina de inicio</h1>'
-
-    );
-});*/
-
-//ejemplo 
-/*app.get('/test', (req, res) => { //el metodo get donde la url si escribo http://localhost:3700/test me va mostrar el json
-    console.log(req.body.nombre); //este console es un ejemplo demostrado con postman
-    console.log(req.query.web); //este console es un ejemplo demostrado con postman
-    res.status(280).send({ //{ la llave significa q es un json req lo q le puedo estar enviando desde el cliente o la peticion q yo haga y res es la response q yo estoy enviando 
-        //status(280) q si es una respuesta exitosa send para enviar los datos
-        messaje: 'hola mundo desde mi appiNodeJS'
-
-    });
-});*/
-//ejemplo 
-//esto se va a ver en la consola de comando
-/*app.post('/test/:id', (req, res) => { //el metodo post donde me va mostrar el json
-    console.log(req.body.nombre); //este console es un ejemplo demostrado con postman
-    console.log(req.query.web); //este console es un ejemplo demostrado con postman
-    console.log(req.params.id); //este console es un ejemplo demostrado con postman
-    res.status(280).send({ //{ la llave significa q es un json req lo q le puedo estar enviando desde el cliente o la peticion q yo haga y res es la response q yo estoy enviando 
-        //status(280) q si es una respuesta exitosa send para enviar los datos
-        messaje: 'hola mundo desde mi appiNodeJS'
-
-    });
-});*/
-
 
 // exportar
 module.exports = app; //exporto app q tiene todo para poder importar e usarlo en otro lado

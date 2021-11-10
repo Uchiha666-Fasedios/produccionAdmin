@@ -302,8 +302,8 @@ var controller = {
         var file = req.params.image;
         var path_file = './upload/articles/' + file;
 
-        fs.exists(path_file, (exists) => {
-            if (exists) {
+        fs.access(path_file,fs.constants.F_OK, (err) => {
+            if (err) {
                 return res.sendFile(path.resolve(path_file)); //sendFile existe dentro de express path la libreria q carge arriba y llamo al metodo resolve q me resuelve una ruta y me saca el fichero path_file
             } else {
                 return res.status(404).send({
