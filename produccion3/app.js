@@ -7,7 +7,7 @@ var bodyParser = require('body-parser'); //cargo el modulo para tener esta libre
 
 // Ejecutar express (http)
 var app = express();
-
+var path = require('path');
 // Cargar ficheros rutas
 var article_routes = require('./routes/article'); //llamo al archivo q tiene todas las rutas
 

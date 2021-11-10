@@ -7,7 +7,7 @@ var app = express();
 
 // cargar archivos rutas
 var project_routes = require('./routes/project'); //llamo al archivo q tiene todas las rutas
-
+var path = require('path');
 // middlewares un metodo q se ejecuta antes de ejecutar la accion de un controlador de ejecutar el resultado de la peticion
 app.use(bodyParser.urlencoded({ extended: false })); //app.use un objeto de express configuracion necesaria para bodyParser
 app.use(bodyParser.json()); //q todo lo q le llege lo convierta a json
