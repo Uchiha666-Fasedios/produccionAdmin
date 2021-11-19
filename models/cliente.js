@@ -6,14 +6,14 @@ var Schema = mongoose.Schema; //vamos a usar el metodo schema
 var ClienteSchema = Schema({
     nombres: {type: String, required: true},
     apellidos: {type: String, required: true},
-    pais: {type: String, required: false},
+    pais: {type: String, default:'Argentina', required: false},
     email: {type: String, required: true},
     password: {type: String, required: true},
     perfil: {type: String, default:'perfil.png', required: true},
-    telefono: {type: String, required: false},
-    genero: {type: String, required: false},
-    f_nacimiento: {type: String, required: false},
-    dni: {type: String, required: false},
+    telefono: {type: String, default:'46622545', required: false},
+    genero: {type: String, default:'humano', required: false},
+    f_nacimiento: {type: String, default:'22/10/1981', required: false},
+    dni: {type: String, default:'30115366', required: false},
     //rol: {type: String, required: true},
     createdAt: {type:Date, default:Date.now, require:true}//por defecto Date.now la fecha del momento
 });
