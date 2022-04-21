@@ -47,7 +47,7 @@ var venta_route = require('./routes/venta'); //llamo al archivo q tiene todas la
 var descuento_route = require('./routes/descuento'); //llamo al archivo q tiene todas las rutas
 
 //mongoose.set('useFindAndModify', false);//para q no me tire error cuando use findByIdAndUpdate o 
-mongoose.connect('mongodb://127.0.0.1:27017/tienda',{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err,res)=>{////127.0.0.1:27017 es el puerto por defecto de mongo
+mongoose.connect('mongodb://127.0.0.1:27017/tienda2',{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err,res)=>{////127.0.0.1:27017 es el puerto por defecto de mongo
 
 
 if (err) {
