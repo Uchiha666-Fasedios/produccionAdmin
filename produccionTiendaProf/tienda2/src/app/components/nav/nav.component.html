@@ -1,0 +1,339 @@
+
+<div class="row" style="
+right: 0;
+left: 0;
+z-index: 1030;
+background: #f1ee51;
+color:#191919" *ngIf="config[0]">
+    <div *ngIf="config[0].envio_activacion != 'Desactivado'" class="col-12 text-center">
+        {{ 'menu.item_nueve' | translate }}
+        <span *ngIf="currency == 'ARS'">$ARS/{{config[0].monto_min_soles}}</span>
+        <span *ngIf="currency != 'ARS'">$USD/{{config[0].monto_min_dolares}}</span>
+    </div>
+</div>
+<header class="header header--standard" data-sticky="true" style="    background: #127c5f !important;">
+   
+    <div class="header__left" *ngIf="config[0]">
+        <a class="ps-logo" [routerLink]="['/']" routerLinkActive="router-link-active">
+        
+            <img [src]="url +'obtener_logo/'+config[0].logo" alt="" style="max-height: 5rem !important;">
+        </a>
+    </div>
+    <div class="header__right">
+        
+        <div class="header__navigation">
+            <ul class="menu">
+                <li><a class="text-white" [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'menu.item_uno' | translate }}</a></li>
+                <li class="menu-item-has-children">
+                      <a class="text-white" style="cursor: pointer;" [routerLink]="['/productos']" >
+                          {{ 'menu.item_dos' | translate }}
+                      </a>
+                    <span class="sub-toggle"></span>
+                    <ul class="sub-menu">
+                        <li *ngFor="let item of config_global.categorias">
+                            <a style="cursor: pointer;" [routerLink]="['/product/',item.titulo]">{{item.titulo}}</a>
+                        </li>
+  
+                    </ul>
+                </li>
+                <li class="menu-item-has-children"><a style="cursor: pointer;" class="text-white">{{ 'menu.item_tres' | translate }}</a><span class="sub-toggle"></span>
+                  <ul class="sub-menu">
+                      <li>
+                          <a *ngIf="parte1[0]" [routerLink]="['/nosotros']">{{ parte1[0].titulo0}}</a>
+                          <a *ngIf="parte2[0]" [routerLink]="['/impacto-social']">{{ parte2[0].titulo0}}</a>
+                          <a *ngIf="parte3[0]" [routerLink]="['/embajadoras']" >{{ parte3[0].titulo0}}</a>
+                      </li>
+                  </ul>
+              </li>
+                <li><a class="text-white" [routerLink]="['/contacto']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'menu.item_cuatro' | translate }}</a></li>
+            </ul>
+        </div>
+        <div class="header__container">
+          <div class="header__search">
+              <form class="ps-form--header-search" >
+                  <input id="input_search" class="form-control" type="text" placeholder="{{ 'menu.item_cinco' | translate }}" name="filtro_search" [(ngModel)]="filtro_search">
+                  <button type="button" (click)="search()" class="text-white"><i  class="icon-magnifier"></i></button>
+              </form>
+              <a class="header__search-mini" href="#"><i class="icon-magnifier"></i></a>
+          </div>
+            <div class="header__actions">
+                  <ng-container *ngIf="user_lc != undefined">
+                      <a class="header__user text-white" [routerLink]="['/cuenta/perfil']"><i class="icon-user"></i></a>
+                      
+                  </ng-container>
+                  <ng-container *ngIf="user_lc == undefined">
+                      <a class="header__user text-white" [routerLink]="['/login']"><i class="icon-user"></i>
+                        </a>
+                  </ng-container>
+  
+                  <ng-container *ngIf="user_lc != undefined">
+                      <a class="header__cart ps-toggle--sidebar" (click)="openCart()">
+                          <i class="icon-cart text-white"></i><span  style="background: #f1ee51;color:black">{{carrito_arr.length}}</span>
+                      </a>
+                  </ng-container>
+                  <ng-container *ngIf="user_lc == undefined">
+                      <a class="header__cart ps-toggle--sidebar" (click)="openCart()">
+                          <i class="icon-cart text-white"></i><span  style="background: #f1ee51;color:black">{{carrito_logout.length}}</span>
+                      </a>
+                  </ng-container>
+  
+                
+                <a class="header__menu-toggle ps-toggle--sidebar text-white" style="cursor: pointer;" (click)="openMenu()"><i class="icon-menu"></i></a>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+    
+<header class="header header--mobile" data-sticky="true" >
+
+           
+<div class="header__left" *ngIf="config[0]"><a class="ps-logo" [routerLink]="['/']" routerLinkActive="router-link-active" ><img [src]="url +'obtener_logo/'+config[0].logo" style="max-height: 5rem !important;" alt=""></a></div>
+
+
+
+  
+
+
+
+
+<div class="header__right">
+    <div class="header__actions">
+            <ng-container *ngIf="user_lc != undefined">
+                <a class="header__user" [routerLink]="['/cuenta/perfil']"><i class="icon-user"></i></a>
+            </ng-container>
+            <ng-container *ngIf="user_lc == undefined">
+                <a class="header__user" [routerLink]="['/login']"><i class="icon-user"></i></a>
+            </ng-container>
+            <ng-container *ngIf="user_lc != undefined">
+                <a class="header__cart ps-toggle--sidebar" (click)="openCart()">
+                    <i class="icon-cart"></i><span>{{carrito_arr.length}}</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="user_lc == undefined">
+                <a class="header__cart ps-toggle--sidebar" (click)="openCart()">
+                    <i class="icon-cart"></i><span>{{carrito_logout.length}}</span>
+                </a>
+            </ng-container>
+        <a class="header__menu-toggle ps-toggle--sidebar" style="cursor: pointer;" (click)="openMenu()"><i class="icon-menu"></i></a>
+    </div>
+</div>
+
+</header>
+  
+
+  
+  
+  <div class="ps-panel--sidebar" id="modalCarrito">
+      <div class="ps-panel__header">
+          <a class="ps-panel__close" style="cursor: pointer;" (click)="openCart()"><i class="icon-cross"></i></a>
+      </div>
+      <div class="ps-panel__content">
+          <div class="ps-cart--mini">
+              <div class="ps-cart__content" *ngIf="user_lc == undefined">
+                  <ng-container *ngIf="carrito_logout.length >= 1">
+                      <div class="ps-cart__items">
+                          <div class="ps-product--mini-cart" *ngFor="let item of carrito_logout; let idx = index">
+                              <div class="ps-product__thumbnail">
+                                  <a [routerLink]="['/productos/',item.producto.slug]">
+                                      <img [src]="url +'obtener_portada/'+item.producto.portada" alt="">
+                                  </a>
+                              </div>
+                              <div class="ps-product__content">
+                                  <span class="ps-product__remove" style="cursor: pointer;" (click)="eliminar_item_guest(item)"><i class="icon-cross"></i>
+                                  </span>
+                                  <a class="ps-product__title" [routerLink]="['/productos/',item.producto.slug]">{{item.producto.titulo}}</a>
+                                  <p> {{ 'carrito.item_cinco' | translate }}: {{item.cantidad}}</p>
+                                  <p> {{ 'carrito.item_seis' | translate }}: {{item.variedad.variedad}}</p>
+                                  <span class="ps-product__price">
+                                      <ng-container *ngIf="currency != 'ARS'">         
+                                        <span class=" mr-3"><b style="    color: #999ea9;">$USD/{{item.producto.precio_dolar}}</b></span>
+                                        <span class="text-danger" *ngIf="item.producto.precio_antes_dolares >= 1">
+                                          <del>$USD/{{item.producto.precio_antes_dolares}}</del>
+                                        </span>
+                                      </ng-container>
+                                      <ng-container *ngIf="currency == 'ARS'">
+                                        
+                                        <span class=" mr-3"><b style="    color: #999ea9;">$ARS/{{item.producto.precio}}</b></span>
+                                        <span class="text-danger" *ngIf="item.producto.precio_antes_soles >= 1">
+                                          <del>$ARS/{{item.producto.precio_antes_soles}}</del>
+                                        </span>
+                                      </ng-container>
+                                  </span>
+                              </div>
+                          </div>
+                         
+                      </div>
+                  </ng-container>
+                  
+                  <ng-container *ngIf="carrito_logout.length == 0">
+                      <form class="ps-form--404" action="404-page.html" method="get">
+                          <div class="ps-form__header">
+                              <img src="assets/img/carrito-de-compras.png" style="width: 220px !important; " alt="">
+                          </div>
+                          <h4 class="text-muted">{{ 'carrito.item_uno' | translate }}</h4>
+
+                          <a [routerLink]="['/productos']" routerLinkActive="router-link-active"  style="text-decoration: underline;
+                          font-weight: 700;">{{ 'carrito.item_dos' | translate }}</a>
+                        </form>
+                  </ng-container>
+                  
+                  <div class="ps-cart__footer">
+                      <h3>Sub Total:<strong>
+                          <span *ngIf="currency != 'ARS'">$USD {{subtotal}}</span>
+                          <span *ngIf="currency == 'ARS'">$ARS/{{subtotal}}</span>
+                      </strong></h3>
+                        <figure  *ngIf="carrito_logout.length != 0">
+                            <a class="ps-btn ps-btn--outline"  [routerLink]="['/carrito']">{{ 'carrito.item_tres' | translate }}</a>
+                            <a class="ps-btn ps-btn--black" *ngIf="user_lc != undefined" [routerLink]="['/checkout']">Checkout</a>
+                        </figure>
+                        <br> 
+                        <ng-container>
+                            <div>
+                                <h5 class="text-center"><b style="color: #127c5f;">{{ 'carrito.item_cuatro' | translate }}</b></h5>
+                            </div>
+                            <br>
+                            <p>
+                                <b style="color: #191919;">{{ 'menu.item_quince' | translate }}</b> {{ 'menu.item_catorce' | translate }}
+                            </p>
+                            <p>
+                                <b style="color: #191919;">{{ 'menu.item_dsiete' | translate }}</b> {{ 'menu.item_dseis' | translate }}
+                            </p>
+                        </ng-container>
+                        
+                  </div>
+
+              </div>
+              <div class="ps-cart__content" *ngIf="user_lc != undefined">
+                  <ng-container *ngIf="carrito_arr.length >= 1">
+                      <div class="ps-cart__items">
+                          <div class="ps-product--mini-cart" *ngFor="let item of carrito_arr; let idx = index">
+                              <div class="ps-product__thumbnail">
+                                  <a [routerLink]="['/productos/',item.producto.slug]">
+                                      <img [src]="url +'obtener_portada/'+item.producto.portada" alt="">
+                                  </a>
+                              </div>
+                              <div class="ps-product__content"><span  style="cursor: pointer;" (click)="eliminar_item(item._id)" class="ps-product__remove"><i class="icon-cross"></i></span>
+                                  <a class="ps-product__title" [routerLink]="['/productos/',item.producto.slug]">{{item.producto.titulo}}</a>
+                                  <p> {{ 'carrito.item_cinco' | translate }}: {{item.cantidad}}</p>
+                                  <p> {{ 'carrito.item_seis' | translate }}: {{item.variedad.valor}}</p>
+                                  <span class="ps-product__price">
+                                    <ng-container *ngIf="currency != 'ARS'">         
+                                        <span class=" mr-3"><b style="    color: #999ea9;">$USD {{item.producto.precio_dolar}}</b></span>
+                                        <span class="text-danger" *ngIf="item.producto.precio_antes_dolares >= 1">
+                                          <del>$USD {{item.producto.precio_antes_dolares}}</del>
+                                        </span>
+                                      </ng-container>
+                                      <ng-container *ngIf="currency == 'ARS'">
+                                        
+                                        <span class=" mr-3"><b style="    color: #999ea9;">$ARS/{{item.producto.precio}}</b></span>
+                                        <span class="text-danger" *ngIf="item.producto.precio_antes_soles >= 1">
+                                          <del>$ARS/{{item.producto.precio_antes_soles}}</del>
+                                        </span>
+                                      </ng-container>
+                                  </span>
+                              </div>
+                          </div>
+                         
+                      </div>
+                  </ng-container>
+                  <ng-container *ngIf="carrito_arr.length == 0">
+                      <form class="ps-form--404" action="404-page.html" method="get">
+                          <div class="ps-form__header">
+                              <img src="assets/img/carrito-de-compras.png" style="width: 220px !important; " alt="">
+                          </div>
+                          <h4 class="text-muted">{{ 'carrito.item_uno' | translate }}</h4>
+                          <a [routerLink]="['/productos']" routerLinkActive="router-link-active"  style="text-decoration: underline;
+                          font-weight: 700;">{{ 'carrito.item_dos' | translate }}</a>
+                        </form>
+                  </ng-container>
+                  
+                  <div class="ps-cart__footer">
+                      <h3>Sub Total:<strong>
+                          <span *ngIf="currency != 'ARS'">$USD/{{subtotal}}</span>
+                          <span *ngIf="currency == 'ARS'">$ARS/{{subtotal}}</span>
+                      </strong></h3>
+                    
+                      <figure *ngIf="carrito_arr.length != 0">
+                          <a class="ps-btn ps-btn--outline"  [routerLink]="['/carrito']">{{ 'carrito.item_tres' | translate }}</a>
+                          <a class="ps-btn ps-btn--black" *ngIf="user_lc != undefined" [routerLink]="['/checkout']">Checkout</a>
+                        </figure>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <div class="ps-panel--sidebar" id="modalMenu">
+      <div class="ps-panel__header"><a class="ps-panel__close" style="cursor: pointer;" (click)="openMenu()"><i class="icon-cross"></i></a></div>
+      <div class="ps-panel__content">
+          <nav class="ps-navigation--mobile">
+              <div class="ps-navigation__language-currency">
+                  <div class="row">
+                      <div class="col-6">
+                          <ul class="ps-list">
+                              <li class="active"><a>{{ 'idioma.item_uno' | translate }}</a></li>
+                          </ul>
+                      </div>
+                      <div class="col-6">
+                          <ul class="ps-list">
+                              <li *ngIf="currency != 'ARS'" class="active"><a>USD</a></li>
+                              <li *ngIf="currency == 'ARS'" class="active"><a>ARS</a></li>
+                          </ul>
+                      </div>
+                  </div>
+              </div>
+              <div class="ps-navigation__menu">
+                  <ul class="menu--desktop">
+                      <li><a style="font-size:30px;" [routerLink]="['/']" >{{ 'menu.item_uno' | translate }}</a></li>
+                      <li><a style="font-size:30px;" [routerLink]="['/productos']" >{{ 'menu.item_dos' | translate }}</a></li>
+                      <li><a style="font-size:30px;" *ngIf="parte1[0]" [routerLink]="['/nosotros']">{{ parte1[0].titulo0}}</a></li>
+                      <li><a style="font-size:30px;" *ngIf="parte2[0]" [routerLink]="['/impacto-social']">{{ parte2[0].titulo0}}</a></li>
+                      <li><a style="font-size:30px;" *ngIf="parte3[0]" [routerLink]="['/embajadoras']" >{{ parte3[0].titulo0}}</a></li>
+                      <li><a style="font-size:30px;" [routerLink]="['/contacto']" >{{ 'menu.item_cuatro' | translate }}</a></li>
+  
+                      <li *ngIf="user_lc"><a style="font-size:30px;" (click)="logout()" >{{ 'menu.item_diez' | translate }}</a></li>
+                  </ul>
+                 
+                  <ul class="menu--mobile">
+                    <li class="menu-item-has-children has-mega-menu"><a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" style="margin:10px;" >{{'shop.item_uno' | translate}} </a><span class="sub-toggle" ></span>
+                        <div id="modalMenu" class="mega-menu2">
+                            <div class="mega-menu__column">
+                                
+                                
+                               
+                                    <li *ngFor="let item of config_global.categorias">
+                                        <a style="cursor: pointer;" [routerLink]="['/product/',item.titulo]">{{item.titulo}}</a>
+                                    </li>
+                                
+                            </div>
+                            
+                        </div>
+                    </li>
+
+                   
+                   
+                      <li><a [routerLink]="['/']" >{{ 'menu.item_uno' | translate }}</a></li>
+                      <li><a  [routerLink]="['/productos']" routerLinkActive="router-link-active" >{{ 'menu.item_dos' | translate }}</a><span ></span>
+                        
+                      </li>      
+                    
+                      <li><a *ngIf="parte1[0]" [routerLink]="['/nosotros']">{{ parte1[0].titulo0}}</a></li>
+                      <li><a *ngIf="parte2[0]" [routerLink]="['/impacto-social']">{{ parte2[0].titulo0}}</a></li>
+                      <li><a *ngIf="parte3[0]" [routerLink]="['/embajadoras']" >{{ parte3[0].titulo0}}</a></li>
+                      <li><a [routerLink]="['/contacto']" >{{ 'menu.item_cuatro' | translate }}</a></li>
+  
+                      <li *ngIf="user_lc"><a (click)="logout()" >{{ 'menu.item_diez' | translate }}</a></li>
+                  </ul>
+              </div>
+              <figure class="ps-navigation__bottom" *ngIf="admin[0]">
+                  <figcaption>{{ 'menu.item_once' | translate }}</figcaption>
+                  <p>{{admin[0].city}}, {{admin[0].pais}} {{admin[0].email}} <br>({{country_calling_code}}) {{admin[0].telefono}}</p>
+              </figure>
+          </nav>
+      </div>
+  </div>
+
+ 

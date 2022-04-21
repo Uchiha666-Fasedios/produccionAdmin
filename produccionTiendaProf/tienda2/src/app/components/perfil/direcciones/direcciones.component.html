@@ -1,0 +1,207 @@
+<app-nav></app-nav>
+
+<div class="ps-page--default">
+    <div class="container">
+      <div class="ps-page__header">
+        <h3>{{'session.item_uno' | translate}}</h3>
+        <ul class="ps-breadcrumb">
+          <li><a  style="cursor: pointer;" [routerLink]="['/cuenta/perfil']" >{{'perfil.item_uno' | translate}}</a></li>
+          <li class="active"><a><b>{{'perfil.item_dos' | translate}}</b></a></li>
+          <li><a  style="cursor: pointer;" [routerLink]="['/cuenta/pedidos']">{{'perfil.item_tres' | translate}}</a></li>
+          <li><a  style="cursor: pointer;" [routerLink]="['/cuenta/reviews']">{{'perfil.item_cuatro' | translate}}</a></li>
+          
+        </ul>
+      </div>
+      <div class="ps-page__content">
+
+<div class="ps-tab-root">
+        <div class="ps-form--auth" style="max-width: 500px !important;">
+          <ul class="ps-tab-list">
+            <li [ngClass]="{'active': op == 1}" (click)="changeOp(1)"><a>{{'perfil.item_cinco' | translate}}</a></li>
+            <li [ngClass]="{'active': op == 2}" (click)="changeOp(2)"><a>{{'perfil.item_dos' | translate}}</a></li>
+          </ul>
+          <div class="ps-tabs">
+            <div class="ps-tab"  [ngClass]="{'active': op == 1}">
+                <div class="ps-checkout">
+                    <form class="ps-form--checkout" #registroForm="ngForm" (ngSubmit)="registrar(registroForm)" style="margin-bottom: 50px;">
+                        <div class="row">
+                          <div class="col-md-12 mx-auto">
+                            <div class="ps-form__billings">
+
+                              <div class="row">
+                                <div class="col-sm-6 form-group">
+                                    <label for="ac-fn">{{'session.item_ocho' | translate}}</label>
+                                    <input type="text" required class="form-control form-control-lg" name="nombres" [(ngModel)]="direccion.nombres" placeholder="{{'session.item_ocho' | translate}}">
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label for="ac-fn">{{'session.item_nueve' | translate}}</label>
+                                    <input type="text" required class="form-control form-control-lg" name="apellidos" [(ngModel)]="direccion.apellidos" placeholder="{{'perfil.item_ocho' | translate}}">
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label for="ac-fn">{{'perfil.item_once' | translate}}
+                                        <span *ngIf="currency != 'ARS'"> {{'perfil.item_trece' | translate}}</span>
+                                    </label>
+                                    <input *ngIf="currency == 'ARS'" type="text" required class="form-control form-control-lg" name="dni" [(ngModel)]="direccion.dni" placeholder="{{'perfil.item_once' | translate}}">
+                                    <input *ngIf="currency != 'ARS'" type="text" class="form-control form-control-lg" name="dni" [(ngModel)]="direccion.dni" placeholder="{{'perfil.item_once' | translate}}">
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label for="ac-fn">{{'perfil.item_catorce' | translate}}
+                                        <span *ngIf="currency == 'ARS'"> {{'perfil.item_trece' | translate}}</span>
+                                    </label>
+                                    <input *ngIf="currency != 'ARS'" type="text" required class="form-control form-control-lg" name="zip" [(ngModel)]="direccion.zip" placeholder="{{'perfil.item_catorce' | translate}}">
+                                    <input *ngIf="currency == 'ARS'" type="text" class="form-control form-control-lg" name="zip" [(ngModel)]="direccion.zip" placeholder="{{'perfil.item_catorce' | translate}}">
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label for="ac-fn">{{'contacto.item_cuatro' | translate}}</label>
+                                    <input type="text" required class="form-control form-control-lg" name="telefono" [(ngModel)]="direccion.telefono" placeholder="{{'contacto.item_cuatro' | translate}}">
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label for="ac-fn">{{'perfil.item_quince' | translate}}</label>
+                                    <textarea required class="form-control" placeholder="{{'perfil.item_quince' | translate}}" name="direccion" [(ngModel)]="direccion.direccion" rows="3"></textarea>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label for="ac-fn">{{'perfil.item_dieciseis' | translate}}
+                                        <span *ngIf="currency != 'ARS'"> {{'perfil.item_trece' | translate}}</span>
+                                    </label>
+                                    <textarea *ngIf="currency == 'ARS'" type="text" required class="form-control" placeholder="{{'perfil.item_dieciseis' | translate}}" name="referencia" [(ngModel)]="direccion.referencia" rows="2"></textarea>
+                                    <textarea *ngIf="currency != 'ARS'" type="text" class="form-control" placeholder="{{'perfil.item_dieciseis' | translate}}" name="referencia" [(ngModel)]="direccion.referencia" rows="2"></textarea>
+                                </div>
+            
+            
+                                <div class="col-sm-6 form-group">
+                                    <label for="ac-fn">{{'perfil.item_diecisiete' | translate}}</label>
+                                    <select class="form-control" name="str_pais" required [(ngModel)]="str_pais" (change)="select_pais()">
+                                        <option value="" selected disabled>{{'carrito.item_diez' | translate}}</option>
+                                        <ng-container *ngFor="let item of zonas">
+                                            <ng-container  *ngIf="currency =='ARS'">
+                                                <option value="{{item.country}}_{{item.zona}}" *ngIf="item.country =='Perú'">{{item.country}}</option>
+                                            </ng-container>
+                                            <ng-container  *ngIf="currency !='ARS'">
+                                                <option value="{{item.country}}_{{item.zona}}" *ngIf="item.country !='Perú'">{{item.country}}</option>
+                                            </ng-container>
+                                           
+                                        </ng-container>
+                                        
+                        
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 form-group" *ngIf="direccion.pais != 'Perú'">
+                                    <label for="ac-fn">{{'perfil.item_dieciocho' | translate}}</label>
+                                    <input type="text" required class="form-control form-control-lg" name="distrito" [(ngModel)]="direccion.distrito" placeholder="{{'perfil.item_diecinueve' | translate}}">
+                                </div>
+                                <div class="col-sm-6 form-group" *ngIf="direccion.pais == 'Perú'">
+                                    <label for="ac-fn">{{'perfil.item_veinte' | translate}}</label>
+                                    <select id="sl-region"  name="region" [(ngModel)]="direccion.region" class="form-control" disabled (change)="select_region()">
+                                        <option value="" selected disabled>{{'carrito.item_diez' | translate}}</option>
+                                        <option value="{{item.id}}" *ngFor="let item of regiones">{{item.name}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 form-group" *ngIf="direccion.pais == 'Perú'">
+                                    <label for="ac-fn">{{'perfil.item_veintiuno' | translate}}</label>
+                                    <select id="sl-provincia" name="provincia" [(ngModel)]="direccion.provincia" class="form-control" disabled (change)="select_provincia()">
+                                        <option value="" selected disabled>{{'carrito.item_diez' | translate}}</option>
+                                        <option value="{{item.id}}" *ngFor="let item of provincias">{{item.name}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 form-group" *ngIf="direccion.pais == 'Perú'">
+                                    <label for="ac-fn">{{'perfil.item_veintidos' | translate}}</label>
+                                    <select id="sl-distrito" name="distrito" [(ngModel)]="direccion.distrito" class="form-control" disabled>
+                                        <option value="" selected disabled>{{'carrito.item_diez' | translate}}</option>
+                                        <option value="{{item.id}}" *ngFor="let item of distritos">{{item.name}}</option>
+                                    </select>
+                                </div>
+                               
+                                <div class="col-sm-12">
+                                  <button type="submit" class="ps-btn ps-btn--fullwidth ps-btn--black">{{'perfil.item_veintitres' | translate}}</button>
+                                </div>
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="ps-tab"  [ngClass]="{'active': op == 2}" >
+                <div class="">
+                    <div class="ps-form--checkout" >
+                      <div class="row">
+                          <div class="col-md-12 mx-auto">
+                             
+                              <div class="row">
+                                  <ng-container *ngIf="!load_data">
+                                      <div class="col-12" *ngIf="direcciones.length >= 1">
+                                          <ng-container *ngFor="let item of direcciones">
+                                              <div class="card mb-3">
+                                                  <div class="card-body">
+                                                      <figure>
+                                                          <figcaption>{{item.destinatario}}</figcaption>
+                                                          <span class="d-block mb-3 font-size-sm text-muted">{{item.zip}}</span>
+                                                  
+                                                          <div class="row">
+                                                              <div class="col" *ngIf="item.pais == 'Perú'">
+                                                                  <p>
+                                                                      {{item.direccion}}
+                                                                      <ng-container *ngIf="item.referencia">
+                                                                          <br>
+                                                                          {{item.referencia}}
+                                                                      </ng-container>
+                                                                      
+                                                                  </p>
+                                                                  <p>
+                                                                    {{item.pais}}, {{item.region}}
+                                                                   <br>
+                                                                    <span>{{item.provincia}}, {{item.distrito}}</span>
+                                                                  </p>
+                                                              </div>
+                                                              <div class="col" *ngIf="item.pais != 'Perú'">
+                                                                  <p>
+                                                                      {{item.direccion}}
+                                                                  </p>
+                                                                  <p>
+                                                                  {{item.pais}}, {{item.distrito}}
+                                                                  </p>
+                                                                  
+                                                              </div>
+                                                              <a class="text-danger" (click)="eliminar(item._id)" style="cursor: pointer;margin-right: 2rem;">[Eliminar]</a>
+                                                          </div>
+                                                      </figure>
+                                                      
+                                                  </div>
+                                              </div>
+                                          </ng-container>
+                                      </div>
+                                      <div class="col-12" *ngIf="direcciones.length == 0">
+                                        <div class="rounded mb-5 p-3">
+                                            <form class="ps-form--404" action="404-page.html" method="get">
+                                              <div class="ps-form__header">
+                                                <img src="assets/images/icono-no-orden.png" alt="">
+                                              </div>
+                                              <h4 class="text-muted">{{'perfil.item_veinticuatro' | translate}}.</h4>
+                                      
+                                            </form>
+                                          </div>
+                                      </div>
+                                  </ng-container>
+                                  
+                                  <div class="col-12 text-center" *ngIf="load_data">
+                                      <span>{{'producto.item_once' | translate}}</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+        
+      </div>
+    </div>
+  </div>
+
+
+<app-footer></app-footer>

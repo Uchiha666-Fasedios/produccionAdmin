@@ -1,0 +1,307 @@
+<app-nav></app-nav>
+
+<div class="ps-page" >
+  <div class="ps-shop ps-shop--sidebar">
+    <div class="container">
+      <div class="ps-shop__container">
+        <div class="ps-shop__sidebar">
+
+          <!--FILTRO DE SEXO-->
+          <aside class="widget widget_shop">
+            <!--ACALAS traducciones src\assets\i18n\es.json por ejemplo shop.item_seis es Sexo-->
+            
+            <ul class="ps-list--under">
+              <li><a class="ps-link--line" (click)="reset()">Reset {{'shop.item_siete' | translate }}</a></li>
+              <li *ngIf="filter_cat_sexo"><a class="ps-link--line" (click)="reset_sexo()">Reset {{'shop.item_seis' | translate }} {{filter_cat_sexo}}</a></li>
+              <li *ngIf="filter_category && filter_category != 'todos'"><a class="ps-link--line" (click)="reset_category()">Reset {{'shop.item_ocho' | translate }} {{filter_category}}</a></li>
+              <li *ngIf="filter_cat_tallas"><a class="ps-link--line" (click)="reset_talla()">Reset {{'shop.item_veinte' | translate }} {{filter_cat_tallas}}</a></li>
+              <li *ngIf="filter_precio_max > 0"><a class="ps-link--line" (click)="reset_precio()">Reset {{'shop.item_diecinueve' | translate }}</a></li>
+              <br><br>
+              <h3 class="widget-title">{{ 'shop.item_seis' | translate }}</h3>
+              
+              <ng-container>
+                <li *ngIf="Woman == true" (click)="buscar_por_sexo('Woman')"><a class="ps-link--line" style="cursor: pointer;">{{ 'shop.item_nueve' | translate }}</a></li>
+                <li *ngIf="Man" (click)="buscar_por_sexo('Man')"><a class="ps-link--line" style="cursor: pointer;">{{ 'shop.item_dies' | translate }}</a></li>
+                <li *ngIf="Unisex" (click)="buscar_por_sexo('Unisex')"><a class="ps-link--line" style="cursor: pointer;">Unisex</a></li>
+                <li *ngIf="Girl" (click)="buscar_por_sexo('Girl')"><a class="ps-link--line" style="cursor: pointer;">{{ 'shop.item_once' | translate }}</a></li>
+                <li *ngIf="Boy" (click)="buscar_por_sexo('Boy')"><a class="ps-link--line" style="cursor: pointer;">{{ 'shop.item_doce' | translate }}</a></li>
+              </ng-container>
+              
+    
+            </ul>
+          </aside>
+          <!--FIN DE FILTRO CATEGORIAS-->
+
+      <!--FILTRO DE CATEGORIAS-->
+          <aside class="widget widget_shop widget_categories">
+            <!--ACALAS traducciones src\assets\i18n\es.json por ejemplo shop.item_uno es Categorias-->
+            
+            <ul class="ps-list--under">
+              
+              <h3 class="widget-title">{{ 'shop.item_uno' | translate }}</h3>
+              
+              <ng-container *ngFor="let item of config_global.categorias;let indice = index">
+                <li (click)="buscar_por_categoria(item.titulo)"><a class="ps-link--line" style="cursor: pointer;">{{item.titulo}}</a></li>
+              </ng-container>
+              
+    
+            </ul>
+          </aside>
+          <!--FIN DE FILTRO CATEGORIAS-->
+
+          <!--FILTRO POR PRECIO-->
+          <aside class="widget widget_shop widget_shop-filter">
+            <h3 class="widget-title">{{ 'shop.item_dos' | translate }}</h3>
+            <div class="ps-sliderr" id="ps-sliderr" data-default-min="0" data-default-max="100" data-max="100" data-step="5"></div>
+
+
+            <p class="ps-slider__meta">{{ 'shop.item_dos' | translate }}:
+              <span class="ps-slider__value ps-slider__min"></span>-
+              <span class="ps-slider__value ps-slider__max"></span>
+            </p>
+
+            <div class="row mt-3">
+              <div class="col-12">
+                <button class="ps-btn ps-btn--black btn-block" (click)="buscar_precios()">{{ 'shop.item_tres' | translate }}</button>
+              </div>
+            </div>
+            <!--FIN DE FILTRO POR PRECIO-->
+
+            <!--FILTRO POR TALLA-->
+            <div class="widget__colors">
+              <h3 class="widget-title">{{ 'shop.item_trece' | translate }}</h3>
+           <!--<div cl ass="ps-color black active" style="margin-bottom:10px !important">
+              <span class="ps-color__left">
+                <i>Todos</i>
+              </span>
+              <input style="width: 15px;height: auto;margin-top: 8px !important;" type="radio" name="group2" (change)="buscar_por_talla()" class="form-control radiocls" id="tallas-todos" value="todos" [(ngModel)]="filter_cat_tallas">
+            </div>--> 
+            <div *ngFor="let item of procat2;let i = index">
+              <div class="ps-color black active" style="margin-bottom:10px !important">
+                <span class="ps-color__left">
+                  <i>{{item}}</i>
+                </span>
+                <input style="width: 15px;height: auto;margin-top: 8px !important;" type="radio" name="group2" (change)="buscar_por_talla()" class="form-control radiocls" id="tallas-{{i}}" value="{{item}}" [(ngModel)]="filter_cat_tallas">
+              </div>
+
+          </div>
+          </div>
+
+           <div class="widget__colors">
+              <h3 class="widget-title">{{ 'shop.item_catorce' | translate }}</h3>
+             
+              <div *ngFor="let item of procat;let i = index">
+                  <div *ngIf="item.valor >= 0"  class="ps-color black active" style="margin-bottom:10px !important">
+                    <span class="ps-color__left">
+                      <i>{{item.valor}}</i>
+                    </span>
+                    <input style="width: 15px;height: auto;margin-top: 8px !important;" type="radio" name="group2" (change)="buscar_por_talla()" class="form-control radiocls" id="tallas-{{i}}" value="{{item.valor}}" [(ngModel)]="filter_cat_tallas">
+                  </div>
+
+              </div>
+
+            </div>
+     
+          </aside>
+
+          <!--FIN DE FILTROS-->
+
+
+          
+          <aside class="widget widget_shop widget_product">
+            <h3 class="widget-title">{{ 'shop.item_cuatro' | translate }}</h3>
+            <ng-container *ngFor="let item of mas_vendidos;let idx = index">
+              <div class="ps-product--sidebar">
+                <div class="ps-product__thumbnail">
+                  <a class="ps-product__overlay" [routerLink]="['/productos/'+item.producto.slug]" ></a><img [src]="url +'obtener_portada/'+item.producto.portada" alt=""></div>
+                  
+                <div class="ps-product__content"><a class="ps-product__title" [routerLink]="['/productos/'+item.producto.slug]" >{{item.producto.titulo}}</a>
+                  
+                  <p class="ps-product__price">
+                    <ng-container *ngIf="currency != 'ARS'">
+                      <span class="text-danger mr-3" *ngIf="item.producto.precio_antes_dolares >= 1">
+                        <del>$USD {{item.producto.precio_antes_dolares}}</del>
+                      </span>
+                      <span><b>$USD {{item.producto.precio_dolar}}</b></span>
+                    </ng-container>
+                    <ng-container *ngIf="currency == 'ARS'">
+                      <span class="text-danger mr-3" *ngIf="item.producto.precio_antes_soles >= 1">
+                        <del>$ARS/{{item.producto.precio_antes_soles}}</del>
+                      </span>
+                      <span><b>$ARS/{{item.producto.precio}}</b></span>
+                    </ng-container>
+                  </p>
+                </div>
+              </div>
+            </ng-container>
+            
+            
+            
+          </aside>
+        </div>
+        <div class="ps-shop__wrapper">
+          <div class="ps-shop__header" style="padding-bottom: 50px !important;">
+            <div class="ps-shop__left">
+              <h1>Shop</h1>
+              <ul class="ps-breadcrumb">
+                <li><a [routerLink]="['/']" routerLinkActive="router-link-active" >Home</a></li>
+                <li>Shop</li>
+              </ul>
+            </div>
+            <div class="ps-shop__right">
+              <p><strong>{{productos.length}}</strong> {{'shop.item_cuatro' | translate }}</p>
+              <div class="ps-shop__actions">
+            
+                <div class="ps-shop__sorting" style="    padding-right: 0px !important;"><span>{{ 'shop.item_cinco' | translate }}</span>
+                  <select class="form-control"  name="sort_by" [(ngModel)]="sort_by" (change)="orden_por()" style="border: none;
+                  font-size: 1.5rem;">
+                    <option value="Defecto">{{'shop.item_quince' | translate }}</option>
+            
+                    <option value="+-Precio">{{'shop.item_dieciseis' | translate }}</option>
+                    <option value="-+Precio">{{'shop.item_diecisiete' | translate }} {{'shop.item_veintitres' | translate }}</option>
+                    <option value="azTitulo">A - Z</option>
+                    <option value="zaTitulo">Z - A</option>
+                  </select>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          <div class="ps-shop__filter-panel"></div>
+          <div class="ps-shop__content">
+            <div class="row mb-5">
+              <ng-container *ngFor="let item of productos| slice: (page-1)*pageSize : (page-1) * pageSize + pageSize">
+                <ng-container *ngIf="item.visibilidad == 'Todo el mundo'">
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 " >
+                    <div class="ps-product">
+                      <div class="ps-product__thumbnail">
+                        <img class="ps-product__image" [src]="url +'obtener_portada/'+item.portada" alt=""/>
+                        <img class="ps-product__image-alt" [src]="url +'obtener_portada/'+item.galeria[0].imagen" alt=""/>
+                        <a class="ps-product__overlay" [routerLink]="['/productos/'+item.slug]" ></a>
+                        <span class="ps-badge ps-badge--hot" *ngIf="item.precio_antes_dolares >= 1 || item.precio_antes_soles >= 1">{{'shop.item_dieciocho' | translate }}</span>
+                        
+                      </div>
+                      <div class="ps-product__content"><a class="ps-product__title"[routerLink]="['/productos/'+item.slug]" >{{item.titulo}}</a>
+                        <span><i class="text-warning fa fa-star"></i></span>
+                                  <span><i class="text-warning fa fa-star"></i></span>
+                                  <span><i class="text-warning fa fa-star"></i></span>
+                                  <span><i class="text-warning fa fa-star"></i></span>
+                                  <span><i class="text-warning fa fa-star"></i></span>
+                        <p class="ps-product__price">
+                          <ng-container *ngIf="currency != 'ARS'">         
+                            <span class=" mr-3"><b>$USD {{item.precio_dolar}}<!--{{item.precio}}--></b></span>
+                            <span class="text-danger" *ngIf="item.precio_antes_dolares >= 1">
+                              <del>$USD {{item.precio_antes_dolares}}</del>
+                            </span>
+                          </ng-container>
+                          <ng-container *ngIf="currency == 'ARS'">
+                            
+                            <span class=" mr-3"><b>$ARS/{{item.precio}}</b></span>
+                            <span class="text-danger" *ngIf="item.precio_antes_soles >= 1">
+                              <del>$ARS/{{item.precio_antes_soles}}</del>
+                            </span>
+                          </ng-container>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="currency == 'ARS'">
+                  <ng-container *ngIf="item.visibilidad == 'Peru'">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 " >
+                      <div class="ps-product">
+                        <div class="ps-product__thumbnail">
+                          <img class="ps-product__image" [src]="url +'obtener_portada/'+item.portada" alt=""/>
+                          <img class="ps-product__image-alt" [src]="url +'obtener_portada/'+item.galeria[0].imagen" alt=""/>
+                          <a class="ps-product__overlay"  [routerLink]="['/productos/'+item.slug]"></a>
+                          <span class="ps-badge ps-badge--hot" *ngIf="item.precio_antes_dolares >= 1 || item.precio_antes_soles >= 1">{{'shop.item_dieciocho' | translate }}</span>
+                          
+                        </div>
+                        <div class="ps-product__content"><a class="ps-product__title"[routerLink]="['/productos/'+item.slug]" >{{item.titulo}}</a>
+                          <span><i class="text-warning fa fa-star"></i></span>
+                                    <span><i class="text-warning fa fa-star"></i></span>
+                                    <span><i class="text-warning fa fa-star"></i></span>
+                                    <span><i class="text-warning fa fa-star"></i></span>
+                                    <span><i class="text-warning fa fa-star"></i></span>
+                          <p class="ps-product__price">
+                            <ng-container *ngIf="currency != 'ARS'">         
+                              <span class=" mr-3"><b>$USD {{item.precio_dolar}}</b></span>
+                              <span class="text-danger" *ngIf="item.precio_antes_dolares >= 1">
+                                <del>$USD {{item.precio_antes_dolares}}</del>
+                              </span>
+                            </ng-container>
+                            <ng-container *ngIf="currency == 'ARS'">
+                              
+                              <span class=" mr-3"><b>$ARS/{{item.precio}}</b></span>
+                              <span class="text-danger" *ngIf="item.precio_antes_soles >= 1">
+                                <del>$ARS/{{item.precio_antes_soles}}</del>
+                              </span>
+                            </ng-container>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="currency != 'ARS'">
+                  <ng-container *ngIf="item.visibilidad == 'Exterior'">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 " >
+                      <div class="ps-product">
+                        <div class="ps-product__thumbnail">
+                          <img class="ps-product__image" [src]="url +'obtener_portada/'+item.portada" alt=""/>
+                          <img class="ps-product__image-alt" [src]="url +'obtener_portada/'+item.galeria[0].imagen" alt=""/>
+                          <a class="ps-product__overlay"  [routerLink]="['/productos/'+item.slug]"></a>
+                          <span class="ps-badge ps-badge--hot" *ngIf="item.precio_antes_dolares >= 1 || item.precio_antes_soles >= 1">{{'shop.item_dieciocho' | translate }}</span>
+                          
+                        </div>
+                        <div class="ps-product__content"><a class="ps-product__title"[routerLink]="['/productos/'+item.slug]" >{{item.titulo}}</a>
+                          <span><i class="text-warning fa fa-star"></i></span>
+                                    <span><i class="text-warning fa fa-star"></i></span>
+                                    <span><i class="text-warning fa fa-star"></i></span>
+                                    <span><i class="text-warning fa fa-star"></i></span>
+                                    <span><i class="text-warning fa fa-star"></i></span>
+                          <p class="ps-product__price">
+                            <ng-container *ngIf="currency != 'ARS'">         
+                              <span class=" mr-3"><b>$USD{{item.precio_dolar}}</b></span>
+                              <span class="text-danger" *ngIf="item.precio_antes_dolares >= 1">
+                                <del>$USD{{item.precio_antes_dolares}}</del>
+                              </span>
+                            </ng-container>
+                            <ng-container *ngIf="currency == 'ARS'">
+                              
+                              <span class=" mr-3"><b>$ARS/{{item.precio}}</b></span>
+                              <span class="text-danger" *ngIf="item.precio_antes_soles >= 1">
+                                <del>$ARS/{{item.precio_antes_soles}}</del>
+                              </span>
+                            </ng-container>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+              
+              
+              
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <ngb-pagination
+                  [(page)]="page"
+                  [pageSize]="pageSize"
+                  [collectionSize]="productos.length"
+                ></ngb-pagination>
+              </div>
+            </div>
+          </div>
+     
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<app-footer></app-footer>

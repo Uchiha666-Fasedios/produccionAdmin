@@ -1,0 +1,15 @@
+<app-nav></app-nav>
+<div class="ps-page__content" style="padding-top: 100px;margin-bottom: 100px;">
+    <form class="ps-form--404" action="404-page.html" method="get" *ngIf="!load">
+      <div class="ps-form__header"><i class="icon-heart"></i></div>
+      <h3 *ngIf="tipo == 'failure'">{{ 'perfil.item_cincuentados' | translate }}.</h3>
+      <p *ngIf="tipo == 'pending' || tipo == 'failure'">{{ 'perfil.item_cincuentatres' | translate }} <a style="cursor: pointer;" 
+        [routerLink]="['/']"> Home</a></p>
+    </form>
+    <form class="ps-form--404" action="404-page.html" method="get" *ngIf="load">
+        <div class="ps-form__header"><i class="icon-confused"></i></div>
+        <h3 *ngIf="tipo == 'success'">{{ 'producto.item_once' | translate }}</h3>
+    </form>
+</div>
+
+<app-footer></app-footer>

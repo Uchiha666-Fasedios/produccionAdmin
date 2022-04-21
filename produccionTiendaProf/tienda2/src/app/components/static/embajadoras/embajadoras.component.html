@@ -1,0 +1,66 @@
+<app-nav></app-nav>
+
+<div class="ps-page--default ps-page--blog">
+    <div class="ps-blog" *ngIf="parte3[0]">
+      <div class="container">
+        <div class="ps-post--detail">
+          <div class="ps-post__header">
+            <h2>{{parte3[0].textoa}}</h2>
+            
+          </div>
+          <div class="ps-post__content ps-document">
+            <div class="ps-post__text">
+              <h4 class="text-center">{{parte3[0].textob}}</h4>
+            </div>
+            <div class="mb-100"><img [src]="url +'obtener_imagen/'+parte3[0].imagen1" alt=""></div>
+            <div class="ps-post__text" >
+              <p><span class="cap">L</span>{{parte3[0].textoc}}</p>
+           
+            </div>
+            <div class="ps-post__text mb-0" >
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 ">
+                  <div class="mb-100"><img [src]="url +'obtener_imagen/'+parte3[0].imagen2" alt=""></div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 ">
+                  <div class="mb-100"><img [src]="url +'obtener_imagen/'+parte3[0].imagen3" alt=""></div>
+                </div>
+              </div>
+              <h4>{{parte3[0].titulo}}</h4>
+              <p>{{parte3[0].textod}}</p>
+
+              <p>{{parte3[0].textoe}}</p>
+
+              <p>{{parte3[0].textof}}</p>
+
+              <p class="mb-0"><p class="mb-0">{{parte3[0].textog}}</p>
+            </div>
+
+
+            <div class="ps-post__text mb-0" style="margin-top:80px">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 ">
+                    <div class="mb-100"><img [src]="url +'obtener_imagen/'+parte3[0].imagen4" alt=""></div>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 ">
+                    <div class="mb-100"><img [src]="url +'obtener_imagen/'+parte3[0].imagen5" alt=""></div>
+                  </div>
+                </div>
+                <h4>{{parte3[0].titulo2}}</h4>
+
+                <p>{{parte3[0].textoh}}</p>
+  
+                <p>{{parte3[0].textoi}}</p>
+  
+                <p class="mb-0">{{parte3[0].textoj}}</p>
+              </div>
+          </div>
+          
+        </div>
+       
+      </div>
+    </div>
+ 
+  </div>
+
+<app-footer></app-footer>
