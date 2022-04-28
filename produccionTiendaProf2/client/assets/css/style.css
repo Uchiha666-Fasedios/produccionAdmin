@@ -12086,16 +12086,6 @@ html .bg--parallax {
   -webkit-animation-name: zoomOut;
   animation-name: zoomOut; }
 
-  @media (min-width: 400px) {
-    .menu--mobile {
-     width: 300px!important; }
-   
-    }
 
-    @media (min-width: 400px) {
-      #navigation-mobile {
-       width: 300px!important; }
-     
-      }
 
 /*# sourceMappingURL=style.css.map */
