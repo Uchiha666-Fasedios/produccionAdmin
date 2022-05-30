@@ -123,7 +123,7 @@ const login_cliente = async function(req,res){
                     }
                     
                   //console.log(vari);
-                    /*for(var item of data.carrito){
+                    for(var item of data.carrito){
                         if (vari != item.variedad.id) {
                         await Carrito.create({
                             cantidad:item.cantidad,
@@ -133,7 +133,7 @@ const login_cliente = async function(req,res){
                         });
 
                        }
-                    }*/
+                    }
 
                 }
 
