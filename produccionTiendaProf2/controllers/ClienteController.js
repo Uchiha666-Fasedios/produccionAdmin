@@ -85,6 +85,7 @@ if (hash) {//si se encripto
 const login_cliente = async function(req,res){
     var data = req.body;
     var cliente_arr = [];
+    var carrito_arr = [];
 
     cliente_arr = await Cliente.find({email:data.email});
 
@@ -92,19 +93,48 @@ const login_cliente = async function(req,res){
         res.status(200).send({message: 'No se encontro el correo', data: undefined});
     }else{
         //LOGIN
-        let user = cliente_arr[0];
+        var user = cliente_arr[0];
         bcrypt.compare(data.password, user.password, async function(error,check){
             if(check){
 
                 if(data.carrito.length >= 1){
+
+                    carrito_arr = await Carrito.find({cliente:user._id});
+                 
+                    //console.log(carrito_arr);
+                    //console.log(data.carrito);
+
+                    for (var itemtabla of carrito_arr) {
+                      for (const item of data.carrito) {
+                          if (itemtabla.variedad == item.variedad.id) {
+                              var vari=itemtabla.variedad;
+                              var var2=item.variedad.id;
+                            var nuevaCantidad = itemtabla.cantidad  + item.cantidad;
+                            console.log(nuevaCantidad);
+                            var reg  = await Carrito.findOneAndUpdate({variedad:vari},{//findByIdAndUpdate busco por id y actualiza
+                                cantidad:nuevaCantidad
+                                }); 
+                                
+                                //res.status(200).send({data:reg});
+                          }
+                          
+                      }
+                        
+                    }
+                    
+                  //console.log(vari);
                     for(var item of data.carrito){
+                        if (vari != item.variedad.id) {
                         await Carrito.create({
                             cantidad:item.cantidad,
                             producto:item.producto._id,
                             variedad:item.variedad.id,
                             cliente:user._id
                         });
+
+                       }
                     }
+
                 }
 
                 res.status(200).send({
