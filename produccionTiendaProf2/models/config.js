@@ -14,6 +14,8 @@ var ConfigSchema = Schema({
     monto_min_dolares: {type: Number, required: true},
     banco: {type: String, required: false},
     cbu: {type: Number, required: false},
+    tokenMercadoPago: {type: String, required: false},
+    clientIdPaypal: {type: String, required: false},
     lenguaje: {type: String, default: null, required: false},
     createdAt: {type:Date, default: Date.now, require: true}
 });
