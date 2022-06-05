@@ -155,6 +155,10 @@
     "configuraciones.item_cincuentaycuatro": "Todo el mundo",
     "configuraciones.item_cincuentaycinco": "Actualizar",
     "configuraciones.item_cincuentayseis": "Titulo",
+    "configuraciones.item_cincuentaysiete": "Metodos de pago",
+    "configuraciones.item_cincuentayocho": "Token de mercado pago",
+    "configuraciones.item_cincuentaynueve": "client-id de paypal",
+
 
     "parte2.item_uno": "Diseña la pagina a tu gusto",
     "parte2.item_dos": "Agregar titulo de la pagina",
