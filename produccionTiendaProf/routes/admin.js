@@ -38,7 +38,7 @@ router.put('/agregar_imagen_galeria_admin/:id',[auth.auth,path],AdminController.
 router.put('/eliminar_imagen_galeria_admin/:id',auth.auth,AdminController.eliminar_imagen_galeria_admin);
 router.get('/verificar_token',auth.auth,AdminController.verificar_token);
 //router.get('/obtener_config_admin',auth.auth,AdminController.obtener_config_admin);
-router.put('/actualizar_config_admin',auth.auth,AdminController.actualizar_config_admin);
+//router.put('/actualizar_config_admin',auth.auth,AdminController.actualizar_config_admin);
 router.post('/pedido_compra_cliente',auth.auth,AdminController.pedido_compra_cliente);
 router.get('/obtener_imagen/:img',AdminController.obtener_imagen);
 router.get('/obtener_detalles_ordenes_cliente/:id',auth.auth,AdminController.obtener_detalles_ordenes_cliente);

@@ -17,7 +17,7 @@ var path = require('path');//modulo para manejar imagenes
     var img_path = req.files.portada.path;//agarro la ruta junto con su nombre de la imagen
     //console.log(req.files);
     //console.log(data);
-    var name = img_path.split('\\');
+    var name = img_path.split('/');
     var portada_name = name[2];
     data.slug = data.titulo.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');//convertimos nuestro titulo en un slug para ponerlo de slug porqe tiene q cargar alguno
     data.portada = portada_name;
