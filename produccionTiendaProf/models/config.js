@@ -14,8 +14,8 @@ var ConfigSchema = Schema({
     monto_min_dolares: {type: Number, required: true},
     banco: {type: String, required: false},
     cbu: {type: Number, required: false},
-    tokenMercadoPago: {type: String, default: 'APP_USR-1950243353246089-020803-e4fc5089b6e92453fddb85932fa79a54-83399485', required: false},
-    clientIdPaypal: {type: String, default: 'AWFiiDV-cte7D3Eu8MApk-pOGJivt0bqa6_RfBxMmq4G8NmgVMGIoRg_HwAnFUWWQbXP0_J71Hd6fJTT&disable-funding=paylater', required: false},
+    tokenMercadoPago: {type: String, required: false},
+    clientIdPaypal: {type: String, required: false},
     lenguaje: {type: String, default: null, required: false},
     createdAt: {type:Date, default: Date.now, require: true}
 });
