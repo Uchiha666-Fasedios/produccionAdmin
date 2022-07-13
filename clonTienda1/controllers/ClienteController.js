@@ -17,6 +17,7 @@ var Slider = require('../models/slider');
 var Parte2 = require('../models/parte2');
 var Parte3 = require('../models/parte3');
 var Admin = require('../models/admin');
+var Etiqueta = require('../models/Etiqueta');
 
 var bcrypt=require('bcrypt-nodejs');//tomo el paqete de encriptacion
 var jwt=require('../helpers/jwt');
@@ -179,27 +180,53 @@ const enviar_email_de_registro = async function(reg){
         var config = await Config.find();
         var admin = await Admin.find();
 
-        readHTMLFile(process.cwd() + '/mails/email_registro.html', (err, html)=>{
+        if (config[0].lenguaje == 'en') {
+            readHTMLFile(process.cwd() + '/mails/email_registro.html', (err, html)=>{
                                 
-            let rest_html = ejs.render(html, {cliente: reg,config:config,admin:admin});
-    
-            var template = handlebars.compile(rest_html);
-            var htmlToSend = template({op:true});
-    
-            var mailOptions = {
-                from: admin[0].email,
-                to: reg.email,
-                subject: 'Gracias por tu registro, ' + config[0].titulo,
-                html: htmlToSend
-            };
-          
-            transporter.sendMail(mailOptions, function(error, info){
-                if (!error) {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+                let rest_html = ejs.render(html, {cliente: reg,config:config,admin:admin});
         
-        });
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: reg.email,
+                    subject: 'Thank you for your registration., ' + config[0].titulo,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }else{
+            readHTMLFile(process.cwd() + '/mails/email_registro.html', (err, html)=>{
+                                
+                let rest_html = ejs.render(html, {cliente: reg,config:config,admin:admin});
+        
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: reg.email,
+                    subject: 'Gracias por tu registro, ' + config[0].titulo,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }
+
+        
     } catch (error) {
         console.log(error);
     }
@@ -240,27 +267,53 @@ const enviar_email_de_activacion = async function(email){
         var admin = await Admin.find();
         var reg  = await Cliente.find({email:email});//findById busco por id
 
-        readHTMLFile(process.cwd() + '/mails/email_activacion.html', (err, html)=>{
+        if (config[0].lenguaje == 'en') {
+            readHTMLFile(process.cwd() + '/mailsIngles/email_activacion.html', (err, html)=>{
                                 
-            let rest_html = ejs.render(html, {cliente: reg,config:config,admin:admin});
-    
-            var template = handlebars.compile(rest_html);
-            var htmlToSend = template({op:true});
-    
-            var mailOptions = {
-                from: admin[0].email,
-                to: reg[0].email,
-                subject: 'Gracias por tu registro, ' + config[0].titulo,
-                html: htmlToSend
-            };
-          
-            transporter.sendMail(mailOptions, function(error, info){
-                if (!error) {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+                let rest_html = ejs.render(html, {cliente: reg,config:config,admin:admin});
         
-        });
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: reg[0].email,
+                    subject: 'Thank you for your registration., ' + config[0].titulo,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }else{
+            readHTMLFile(process.cwd() + '/mails/email_activacion.html', (err, html)=>{
+                                
+                let rest_html = ejs.render(html, {cliente: reg,config:config,admin:admin});
+        
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: reg[0].email,
+                    subject: 'Gracias por tu registro, ' + config[0].titulo,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }
+
+        
     } catch (error) {
         console.log(error);
     }
@@ -302,27 +355,54 @@ const enviar_email_de_cambio_pass = async function(email){
         var admin = await Admin.find();
         var reg  = await Cliente.find({email:email});//findById busco por id
 
-        readHTMLFile(process.cwd() + '/mails/email_cambio_pass.html', (err, html)=>{
+
+        if (config[0].lenguaje == 'en') {
+            readHTMLFile(process.cwd() + '/mailsIngles/email_cambio_pass.html', (err, html)=>{
                                 
-            let rest_html = ejs.render(html, {cliente: reg,config:config,admin:admin});
-    
-            var template = handlebars.compile(rest_html);
-            var htmlToSend = template({op:true});
-    
-            var mailOptions = {
-                from: admin[0].email,
-                to: reg[0].email,
-                subject: 'Solicitaste el cambio de contraseña, ' + config[0].titulo,
-                html: htmlToSend
-            };
-          
-            transporter.sendMail(mailOptions, function(error, info){
-                if (!error) {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+                let rest_html = ejs.render(html, {cliente: reg,config:config,admin:admin});
         
-        });
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: reg[0].email,
+                    subject: 'You requested the change of password, ' + config[0].titulo,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }else{
+            readHTMLFile(process.cwd() + '/mails/email_cambio_pass.html', (err, html)=>{
+                                
+                let rest_html = ejs.render(html, {cliente: reg,config:config,admin:admin});
+        
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: reg[0].email,
+                    subject: 'Solicitaste el cambio de contraseña, ' + config[0].titulo,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }
+
+        
     } catch (error) {
         console.log(error);
     }
@@ -879,7 +959,11 @@ const listar_clientes_tienda = async function(req,res){
 }
 
 const listar_productos_destacados_publico = async function(req,res){
-    let reg = await Producto_etiqueta.find({etiqueta:"61a390d39b40d02e0cb9d789"}).populate('producto');
+    var eti = await Etiqueta.find();
+        var etiqueta_id=eti[0]._id;
+        //console.log(etiqueta_id);
+         
+    let reg = await Producto_etiqueta.find({etiqueta:etiqueta_id}).populate('producto');
     res.status(200).send({data: reg});
 }
 
@@ -1028,28 +1112,55 @@ const enviar_orden_compra = async function(venta){
         var dventa = await Dventa.find({venta:venta}).populate('producto').populate('variedad');
         var config = await Config.find();
         var admin = await Admin.find();
-    
-        readHTMLFile(process.cwd() + '/mails/email_compra.html', (err, html)=>{
+
+        if (config[0].lenguaje == 'en') {
+            
+            readHTMLFile(process.cwd() + '/mails/email_compra.html', (err, html)=>{
                                 
-            let rest_html = ejs.render(html, {orden: orden, dventa:dventa, config:config});
-    
-            var template = handlebars.compile(rest_html);
-            var htmlToSend = template({op:true});
-    
-            var mailOptions = {
-                from: admin[0].email,
-                to: orden.cliente.email,
-                subject: 'Confirmación de compra ' + orden._id,
-                html: htmlToSend
-            };
-          
-            transporter.sendMail(mailOptions, function(error, info){
-                if (!error) {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+                let rest_html = ejs.render(html, {orden: orden, dventa:dventa, config:config, admin:admin});
         
-        });
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: orden.cliente.email,
+                    subject: 'Purchase confirmation ' + orden._id,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }else{
+            readHTMLFile(process.cwd() + '/mails/email_compra.html', (err, html)=>{
+                                
+                let rest_html = ejs.render(html, {orden: orden, dventa:dventa, config:config, admin:admin});
+        
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: orden.cliente.email,
+                    subject: 'Confirmación de compra ' + orden._id,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }
+    
+        
     } catch (error) {
         console.log(error);
     }

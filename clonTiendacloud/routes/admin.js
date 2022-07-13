@@ -78,6 +78,7 @@ router.get('/obtener_terminos',AdminController.obtener_terminos);
 router.put('/actualizar_terminos_admin/:id',auth.auth,AdminController.actualizar_terminos_admin);
 router.delete('/eliminar_terminos_admin/:id',auth.auth, AdminController.eliminar_terminos_admin);
 router.get('/obtener_admin',AdminController.obtener_admin);
+router.get('/obtener_adming',AdminController.obtener_adming);
 router.put('/actualizar_perfil_admin',auth.auth, AdminController.actualizar_perfil_admin);//parametros filtro seria opcional, auth.auth el parametro del token
 
 router.post('/pass_cambioAdmin/:email',AdminController.pass_cambioAdmin);

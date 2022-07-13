@@ -10,7 +10,7 @@ var AdminSchema = Schema({
     password: {type: String, required: true},
     telefono: {type: String,default:'4512452', required: true},
     city: {type: String,default:'ponedcity', required: true},
-    pais: {type: String,default:'ponedpais', required: true},
+    pais: {type: String,default:'ponerpais', required: true},
     rol: {type: String,default:'admin', required: true},
     dni: {type: String,default:'29115222', required: true},
 });

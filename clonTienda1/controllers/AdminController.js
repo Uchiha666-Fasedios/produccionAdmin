@@ -757,28 +757,54 @@ const mail_confirmar_envio = async function(venta){
         var dventa = await Dventa.find({venta:venta}).populate('producto').populate('variedad');
         var config = await Config.find();
         var admin = await Admin.find();
-    
-        readHTMLFile(process.cwd() + '/mails/email_enviado.html', (err, html)=>{
+
+        if (config[0].lenguaje == 'en') {
+            readHTMLFile(process.cwd() + '/mailsIngles/email_enviado.html', (err, html)=>{
                                 
-            let rest_html = ejs.render(html, {orden: orden, dventa:dventa, config:config});
-    
-            var template = handlebars.compile(rest_html);
-            var htmlToSend = template({op:true});
-    
-            var mailOptions = {
-                from: admin[0].email,
-                to: orden.cliente.email,
-                subject: 'Tu pedido ' + orden._id + ' fué enviado',
-                html: htmlToSend
-            };
-          
-            transporter.sendMail(mailOptions, function(error, info){
-                if (!error) {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+                let rest_html = ejs.render(html, {orden: orden, dventa:dventa, config:config, admin:admin});
         
-        });
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: orden.cliente.email,
+                    subject: 'Your order ' + orden._id + ' it was sent',
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }else{
+            readHTMLFile(process.cwd() + '/mails/email_enviado.html', (err, html)=>{
+                                
+                let rest_html = ejs.render(html, {orden: orden, dventa:dventa, config:config, admin:admin});
+        
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: orden.cliente.email,
+                    subject: 'Tu pedido ' + orden._id + ' fué enviado',
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }
+    
+        
     } catch (error) {
         console.log(error);
     }
@@ -815,28 +841,55 @@ const enviar_orden_compra = async function(venta){
         var dventa = await Dventa.find({venta:venta}).populate('producto').populate('variedad');
         var config = await Config.find();
         var admin = await Admin.find();
-    
-        readHTMLFile(process.cwd() + '/mails/email_compra.html', (err, html)=>{
+
+        if (config[0].lenguaje == 'en') {
+            readHTMLFile(process.cwd() + '/mailsIngles/email_compra.html', (err, html)=>{
                                 
-            let rest_html = ejs.render(html, {orden: orden, dventa:dventa,config:config});//rederiza la plantilla
-    
-            var template = handlebars.compile(rest_html);
-            var htmlToSend = template({op:true});
-    
-            var mailOptions = {
-                from: admin[0].email,
-                to: orden.cliente.email,
-                subject: 'Confirmación de compra ' + orden._id,
-                html: htmlToSend
-            };
-          
-            transporter.sendMail(mailOptions, function(error, info){
-                if (!error) {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+                let rest_html = ejs.render(html, {orden: orden, dventa:dventa,config:config, admin:admin});//rederiza la plantilla
         
-        });
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: orden.cliente.email,
+                    subject: 'Confirmación de compra ' + orden._id,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+
+        }else{
+            readHTMLFile(process.cwd() + '/mails/email_compra.html', (err, html)=>{
+                                
+                let rest_html = ejs.render(html, {orden: orden, dventa:dventa,config:config, admin:admin});//rederiza la plantilla
+        
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: orden.cliente.email,
+                    subject: 'Confirmación de compra ' + orden._id,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }
+    
+        
     } catch (error) {
         console.log(error);
     }
@@ -1148,27 +1201,53 @@ const enviar_email_pedido_compra = async function(venta){
         var config = await Config.find();
         var admin = await Admin.find();
 
-        readHTMLFile(process.cwd() + '/mails/email_pedido.html', (err, html)=>{
+        if (config[0].lenguaje == 'en') {
+            readHTMLFile(process.cwd() + '/mailsIngles/email_pedido.html', (err, html)=>{
                                 
-            let rest_html = ejs.render(html, {orden: orden, dventa:dventa,config:config});
-    
-            var template = handlebars.compile(rest_html);
-            var htmlToSend = template({op:true});
-    
-            var mailOptions = {
-                from: admin[0].email,
-                to: orden.cliente.email,
-                subject: 'Gracias por tu orden, ' + config.titulo,
-                html: htmlToSend
-            };
-          
-            transporter.sendMail(mailOptions, function(error, info){
-                if (!error) {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+                let rest_html = ejs.render(html, {orden: orden, dventa:dventa,config:config, admin:admin});
         
-        });
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: orden.cliente.email,
+                    subject: 'Thank you for your order, ' + config.titulo,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }else{
+            readHTMLFile(process.cwd() + '/mails/email_pedido.html', (err, html)=>{
+                                
+                let rest_html = ejs.render(html, {orden: orden, dventa:dventa,config:config, admin:admin});
+        
+                var template = handlebars.compile(rest_html);
+                var htmlToSend = template({op:true});
+        
+                var mailOptions = {
+                    from: admin[0].email,
+                    to: orden.cliente.email,
+                    subject: 'Gracias por tu orden, ' + config.titulo,
+                    html: htmlToSend
+                };
+              
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (!error) {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            
+            });
+        }
+
+       
     } catch (error) {
         console.log(error);
     }
@@ -1199,7 +1278,11 @@ const obtener_detalles_ordenes_cliente  = async function(req,res){
 const obtener_tope_destacados  = async function(req,res){
    var tope = [];
 
-         tope = await Producto_etiqueta.find({etiqueta:"61a390d39b40d02e0cb9d789"});
+
+        var reg = await Etiqueta.find();
+        var etiqueta_id=reg[0]._id;
+        //console.log(etiqueta_id);
+         tope = await Producto_etiqueta.find({etiqueta:etiqueta_id});
         /*if(tope.length >= 4){
 
         }*/
@@ -2496,6 +2579,22 @@ const obtener_parte3_admin = async (req,res)=>{
                             }
 
 
+                            const obtener_adming = async function(req, res){//async define una función asíncrona,
+                                //console.log(req.user);
+                                
+                                    // var id=req.params['id'];
+                                try {//si va todo bien y no hay errores porqe si se pone en la url otro id desconocido captura el error
+                                    var reg  = await Admin.find();//findById busco por id
+                                                res.status(200).send({admi:reg});  
+                                } catch (error) {//captura el error
+                                    res.status(200).send({admi:undefined,message:'error no admin'});//manda la data undefined para poder validar en el fronten edit-component  
+                                }
+                                        
+                                            
+                                
+                                }
+
+
                         const pass_cambioAdmin = async function(req, res){//async define una función asíncrona,
 
                             var email=req.params['email'];
@@ -2535,44 +2634,79 @@ const obtener_parte3_admin = async (req,res)=>{
                         
                                 var admin = await Admin.find();
                                 var config = await Config.find();
-                                
-                                var transporter = nodemailer.createTransport(smtpTransport({
-                                    service: 'gmail',
-                                    host: 'smtp.gmail.com',
-                                    auth: {
-                                        user: admin[0].email,
-                                        pass: config[0].claveGmail 
-                                    }
-                                }));
-                            
-                             
-                                //var orden = await Venta.findById({_id:venta}).populate('cliente').populate('direccion');
-                                //var dventa = await Dventa.find({venta:venta}).populate('producto').populate('variedad');
-                                var config = await Config.find();
-                                var admin = await Admin.find();
-                                //var reg  = await Cliente.find({email:email});//findById busco por id
-                        
-                                readHTMLFile(process.cwd() + '/mails/email_cambioAdmin_pass.html', (err, html)=>{
-                                                        
-                                    let rest_html = ejs.render(html, {config:config,admin:admin});
-                            
-                                    var template = handlebars.compile(rest_html);
-                                    var htmlToSend = template({op:true});
-                            
-                                    var mailOptions = {
-                                        from: admin[0].email,
-                                        to: email,
-                                        subject: 'Solicitaste el cambio de contraseña, ' + config[0].titulo,
-                                        html: htmlToSend
-                                    };
-                                  
-                                    transporter.sendMail(mailOptions, function(error, info){
-                                        if (!error) {
-                                            console.log('Email sent: ' + info.response);
+
+                                if (admin[0] == undefined || config[0] == undefined) {//no hay nadie registrado
+                                     //status(200) q si es una respuesta exitosa send para enviar los datos
+                                  return console.log('no admin');
+    
+                                    
+                                }else{//hay admin y config email
+                                    var transporter = nodemailer.createTransport(smtpTransport({
+                                        service: 'gmail',
+                                        host: 'smtp.gmail.com',
+                                        auth: {
+                                            user: admin[0].email,
+                                            pass: config[0].claveGmail 
                                         }
-                                    });
+                                    }));
                                 
-                                });
+                                 
+                                    //var orden = await Venta.findById({_id:venta}).populate('cliente').populate('direccion');
+                                    //var dventa = await Dventa.find({venta:venta}).populate('producto').populate('variedad');
+                                    var config = await Config.find();
+                                    var admin = await Admin.find();
+                                    //var reg  = await Cliente.find({email:email});//findById busco por id
+
+                                    if (config[0].lenguaje == 'en') {
+                                        readHTMLFile(process.cwd() + '/mailsIngles/email_cambioAdmin_pass.html', (err, html)=>{
+                                                            
+                                            let rest_html = ejs.render(html, {config:config,admin:admin});
+                                    
+                                            var template = handlebars.compile(rest_html);
+                                            var htmlToSend = template({op:true});
+                                    
+                                            var mailOptions = {
+                                                from: admin[0].email,
+                                                to: email,
+                                                subject: 'You requested the change of password, ' + config[0].titulo,
+                                                html: htmlToSend
+                                            };
+                                          
+                                            transporter.sendMail(mailOptions, function(error, info){
+                                                if (!error) {
+                                                    console.log('Email sent: ' + info.response);
+                                                }
+                                            });
+                                        
+                                        });
+                                    }else{
+                                        readHTMLFile(process.cwd() + '/mails/email_cambioAdmin_pass.html', (err, html)=>{
+                                                            
+                                            let rest_html = ejs.render(html, {config:config,admin:admin});
+                                    
+                                            var template = handlebars.compile(rest_html);
+                                            var htmlToSend = template({op:true});
+                                    
+                                            var mailOptions = {
+                                                from: admin[0].email,
+                                                to: email,
+                                                subject: 'Solicitaste el cambio de contraseña, ' + config[0].titulo,
+                                                html: htmlToSend
+                                            };
+                                          
+                                            transporter.sendMail(mailOptions, function(error, info){
+                                                if (!error) {
+                                                    console.log('Email sent: ' + info.response);
+                                                }
+                                            });
+                                        
+                                        });
+                                    }
+                            
+                                    
+                                }
+                                
+                                
                             } catch (error) {
                                 console.log(error);
                             }
@@ -2717,6 +2851,7 @@ module.exports = {
     actualizar_terminos_admin,
     eliminar_terminos_admin,
     obtener_admin,
+    obtener_adming,
     pass_cambioAdmin,
     update_Adminpass,
     actualizar_perfil_admin,

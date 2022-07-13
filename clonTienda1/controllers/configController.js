@@ -65,12 +65,14 @@ var logo_name = name[2];
 var reg  = await Config.findByIdAndUpdate({_id:config[0]._id},{//findByIdAndUpdate busco por id y actualiza, 6133c21c909f8e22b8ec6adc es el id de robomongo en config el primero q cree por defecto con la serie 001 y correlativo 000001
 categorias:JSON.parse(data.categorias),//lo convierto a array porqe venia como objeto json por el tema de la imagen
 titulo:data.titulo,
-serie:data.serie,
+//serie:data.serie,
 logo:logo_name,
-correlativo:data.correlativo,
+//correlativo:data.correlativo,
 banco:data.banco,
 cbu:data.cbu,
 claveGmail:data.claveGmail,
+dominio:data.dominio,
+
 tokenMercadoPago:data.tokenMercadoPago,
 clientIdPaypal:data.clientIdPaypal,
 envio_activacion : data.envio_activacion,
@@ -101,11 +103,13 @@ var data=req.body;//lo q me viene del formulario del body
     var reg  = await Config.findByIdAndUpdate({_id:config[0]._id},{//findByIdAndUpdate busco por id y actualiza, 6133c21c909f8e22b8ec6adc es el id de robomongo en config el primero q cree por defecto con la serie 001 y correlativo 000001
 categorias:data.categorias,
 titulo:data.titulo,
-serie:data.serie,
-correlativo:data.correlativo,
+//serie:data.serie,
+//correlativo:data.correlativo,
 banco:data.banco,
 cbu:data.cbu,
 claveGmail:data.claveGmail,
+dominio:data.dominio,
+
 tokenMercadoPago:data.tokenMercadoPago,
 clientIdPaypal:data.clientIdPaypal,
 lenguaje : data.lenguaje,
