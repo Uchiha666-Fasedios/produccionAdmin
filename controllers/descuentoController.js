@@ -219,6 +219,7 @@ descuentos.forEach(element => {
 if (arr_descuentos.length >= 1) {
      res.status(200).send({data:arr_descuentos});
 }else{
+    
      res.status(200).send({data:undefined});
 }
 

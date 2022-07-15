@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.8.1 (2021-05-20)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -269,8 +269,6 @@
         if (editor.hasPlugin('lists')) {
           register$1(editor);
           register(editor);
-        } else {
-          console.error('Please use the Lists plugin together with the Advanced List plugin.');
         }
       });
     }

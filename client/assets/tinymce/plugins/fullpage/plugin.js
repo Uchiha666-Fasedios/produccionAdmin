@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.8.1 (2021-05-20)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -84,10 +84,10 @@
       var headerFragment = parseHeader(head);
       var data = {};
       var elm, matches;
-      var getAttr = function (elm, name) {
+      function getAttr(elm, name) {
         var value = elm.attr(name);
         return value || '';
-      };
+      }
       data.fontface = getDefaultFontFamily(editor);
       data.fontsize = getDefaultFontSize(editor);
       elm = headerFragment.firstChild;
@@ -142,16 +142,16 @@
     var dataToHtml = function (editor, data, head) {
       var headElement, elm, value;
       var dom = editor.dom;
-      var setAttr = function (elm, name, value) {
+      function setAttr(elm, name, value) {
         elm.attr(name, value ? value : undefined);
-      };
-      var addHeadNode = function (node) {
+      }
+      function addHeadNode(node) {
         if (headElement.firstChild) {
           headElement.insert(node, headElement.firstChild);
         } else {
           headElement.append(node);
         }
-      };
+      }
       var headerFragment = parseHeader(head);
       headElement = headerFragment.getAll('head')[0];
       if (!headElement) {
@@ -500,7 +500,7 @@
       return header;
     };
     var handleGetContent = function (editor, head, foot, evt) {
-      if (evt.format === 'html' && !evt.selection && (!evt.source_view || !shouldHideInSourceView(editor))) {
+      if (!evt.selection && (!evt.source_view || !shouldHideInSourceView(editor))) {
         evt.content = unprotectHtml(global$1.trim(head) + '\n' + global$1.trim(evt.content) + '\n' + global$1.trim(foot));
       }
     };

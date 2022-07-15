@@ -79,7 +79,8 @@ var reg  = await Cupon.findByIdAndUpdate({_id:id},{//findByIdAndUpdate busco por
 codigo:data.codigo,
 tipo:data.tipo,
 valor:data.valor,
-limite:data.limite
+limite:data.limite,
+disponibilidad: data.disponibilidad
 }) 
 
 res.status(200).send({data:reg});

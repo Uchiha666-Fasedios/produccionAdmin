@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.8.1 (2021-05-20)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -273,19 +273,10 @@
     var getValue = function (item) {
       return isString(item.value) ? item.value : '';
     };
-    var getText = function (item) {
-      if (isString(item.text)) {
-        return item.text;
-      } else if (isString(item.title)) {
-        return item.title;
-      } else {
-        return '';
-      }
-    };
     var sanitizeList = function (list, extractValue) {
       var out = [];
       global$2.each(list, function (item) {
-        var text = getText(item);
+        var text = isString(item.text) ? item.text : isString(item.title) ? item.title : '';
         if (item.menu !== undefined) {
           var items = sanitizeList(item.menu, extractValue);
           out.push({
@@ -910,7 +901,8 @@
         };
         var attachState = {
           href: data.url.value,
-          attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : noop
+          attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : function () {
+          }
         };
         DialogConfirms.preprocess(editor, changedData).then(function (pData) {
           link(editor, attachState, pData);
@@ -1188,7 +1180,8 @@
       var onSetupLink = function (buttonApi) {
         var node = editor.selection.getNode();
         buttonApi.setDisabled(!getAnchorElement(editor, node));
-        return noop;
+        return function () {
+        };
       };
       editor.ui.registry.addContextForm('quicklink', {
         launch: {
@@ -1222,7 +1215,8 @@
               if (!anchor) {
                 var attachState = {
                   href: value,
-                  attach: noop
+                  attach: function () {
+                  }
                 };
                 var onlyText = isOnlyTextSelected(editor);
                 var text = onlyText ? Optional.some(getAnchorText(editor.selection, anchor)).filter(function (t) {

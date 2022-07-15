@@ -7,7 +7,7 @@ var CarritoSchema = Schema({
     producto: {type: Schema.ObjectId, ref:'producto', required: true},//Aca se esta vinculando el campo producto a la coleccion producto o sea al modelo producto..ref:'producto' qiere decir q hace referencia a esta coleccion
     cliente: {type: Schema.ObjectId, ref:'cliente', required: true},
     cantidad: {type: Number, required: true},
-    variedad: {type: String, required: true},
+    variedad: {type: Schema.ObjectId, ref: 'variedad', required: true},
     createdAt: {type:Date, default:Date.now, require:true}//por defecto Date.now la fecha del momento
 });
 

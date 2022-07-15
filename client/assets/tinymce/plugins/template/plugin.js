@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.8.1 (2021-05-20)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -159,7 +159,7 @@
     var hasClass = function (n, c) {
       return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
     };
-    var insertTemplate = function (editor, _ui, html) {
+    var insertTemplate = function (editor, ui, html) {
       var el;
       var dom = editor.dom;
       var sel = editor.selection.getContent();
@@ -365,13 +365,13 @@
       if (html.indexOf('<html>') === -1) {
         var contentCssEntries_1 = '';
         var contentStyle = getContentStyle(editor);
+        if (contentStyle) {
+          contentCssEntries_1 += '<style type="text/css">' + contentStyle + '</style>';
+        }
         var cors_1 = shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
         global$1.each(editor.contentCSS, function (url) {
           contentCssEntries_1 += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '"' + cors_1 + '>';
         });
-        if (contentStyle) {
-          contentCssEntries_1 += '<style type="text/css">' + contentStyle + '</style>';
-        }
         var bodyClass = getBodyClass(editor);
         var encode = editor.dom.encode;
         var isMetaKeyPressed = global$3.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';

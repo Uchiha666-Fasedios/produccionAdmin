@@ -34,6 +34,6 @@ router.get('/listar_productos_recomendados_public/:categoria', productoControlle
 router.get('/listar_productos_nuevos_public', productoController.listar_productos_nuevos_public);
 router.get('/listar_productos_masvendidos_public', productoController.listar_productos_masvendidos_public);
 router.get('/obtener_reviews_producto_public/:id', productoController.obtener_reviews_producto_public);
-
+//router.get('/obtener_sexo_productos', productoController.obtener_sexo_productos);
 
 module.exports = router; //para poder importarlo con un reqired

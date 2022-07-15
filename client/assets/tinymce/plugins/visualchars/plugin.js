@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.8.1 (2021-05-20)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -35,32 +35,6 @@
     var fireVisualChars = function (editor, state) {
       return editor.fire('VisualChars', { state: state });
     };
-
-    var typeOf = function (x) {
-      var t = typeof x;
-      if (x === null) {
-        return 'null';
-      } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
-        return 'array';
-      } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
-        return 'string';
-      } else {
-        return t;
-      }
-    };
-    var isType = function (type) {
-      return function (value) {
-        return typeOf(value) === type;
-      };
-    };
-    var isSimpleType = function (type) {
-      return function (value) {
-        return typeof value === type;
-      };
-    };
-    var isString = isType('string');
-    var isBoolean = isSimpleType('boolean');
-    var isNumber = isSimpleType('number');
 
     var noop = function () {
     };
@@ -177,6 +151,32 @@
       none: none,
       from: from
     };
+
+    var typeOf = function (x) {
+      var t = typeof x;
+      if (x === null) {
+        return 'null';
+      } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
+        return 'array';
+      } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
+        return 'string';
+      } else {
+        return t;
+      }
+    };
+    var isType = function (type) {
+      return function (value) {
+        return typeOf(value) === type;
+      };
+    };
+    var isSimpleType = function (type) {
+      return function (value) {
+        return typeof value === type;
+      };
+    };
+    var isString = isType('string');
+    var isBoolean = isSimpleType('boolean');
+    var isNumber = isSimpleType('number');
 
     var map = function (xs, f) {
       var len = xs.length;
@@ -443,20 +443,18 @@
       editor.selection.moveToBookmark(bookmark);
     };
 
-    var applyVisualChars = function (editor, toggleState) {
-      fireVisualChars(editor, toggleState.get());
+    var toggleVisualChars = function (editor, toggleState) {
       var body = editor.getBody();
+      var selection = editor.selection;
+      toggleState.set(!toggleState.get());
+      fireVisualChars(editor, toggleState.get());
+      var bookmark = selection.getBookmark();
       if (toggleState.get() === true) {
         show(editor, body);
       } else {
         hide(editor, body);
       }
-    };
-    var toggleVisualChars = function (editor, toggleState) {
-      toggleState.set(!toggleState.get());
-      var bookmark = editor.selection.getBookmark();
-      applyVisualChars(editor, toggleState);
-      editor.selection.moveToBookmark(bookmark);
+      selection.moveToBookmark(bookmark);
     };
 
     var register = function (editor, toggleState) {
@@ -474,7 +472,9 @@
 
     var setup = function (editor, toggleState) {
       editor.on('init', function () {
-        applyVisualChars(editor, toggleState);
+        var valueForToggling = !isEnabledByDefault(editor);
+        toggleState.set(valueForToggling);
+        toggleVisualChars(editor, toggleState);
       });
     };
 
@@ -491,7 +491,6 @@
           }
         });
       }
-      editor.on('remove', debouncedToggle.stop);
     };
 
     var toggleActiveState = function (editor, enabledStated) {
@@ -527,7 +526,7 @@
 
     function Plugin () {
       global.add('visualchars', function (editor) {
-        var toggleState = Cell(isEnabledByDefault(editor));
+        var toggleState = Cell(false);
         register(editor, toggleState);
         register$1(editor, toggleState);
         setup$1(editor, toggleState);

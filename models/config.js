@@ -9,6 +9,15 @@ var ConfigSchema = Schema({
     logo: {type: String, required:true},
     serie: {type: String, required:true},
     correlativo: {type: String, required:true},
+    envio_activacion: {type: String, required: true},
+    monto_min_soles: {type: Number, required: true},
+    monto_min_dolares: {type: Number, required: true},
+    banco: {type: String, required: false},
+    cbu: {type: Number, required: false},
+    tokenMercadoPago: {type: String, required: false},
+    clientIdPaypal: {type: String, required: false},
+    lenguaje: {type: String, default: null, required: false},
+    createdAt: {type:Date, default: Date.now, require: true}
 });
 
 module.exports = mongoose.model('config', ConfigSchema); ////para poder importarlo con un reqired

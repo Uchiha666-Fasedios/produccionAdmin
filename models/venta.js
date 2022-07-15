@@ -4,17 +4,21 @@ var mongoose = require('mongoose'); //cargo este modulo esta libreria q es la q 
 var Schema = mongoose.Schema; //vamos a usar el metodo schema
 
 var VentaSchema = Schema({
-    cliente: {type: Schema.ObjectId, ref:'cliente', required: true},//Aca se esta vinculando el campo producto a la coleccion producto o sea al modelo producto..ref:'producto' qiere decir q hace referencia a esta coleccion
-    nventa: {type: String, required: true},
-    subtotal: {type: Number, required: true},
-    envio_titulo: {type: String, required: true},
-    envio_precio: {type: Number, required: true},
-    transaccion: {type: String, required: true},
-    cupon: {type: String, required: false},
-    estado: {type: String, required: true},
-    direccion: {type: Schema.ObjectId, ref:'direccion', required: true},
-    nota: {type: String, required: false},
-    createdAt: {type:Date, default:Date.now, require:true}
+    cliente: {type: Schema.ObjectId, ref: 'cliente', required: true},
+    subtotal: {type: Number, require: true},
+    total_pagar: {type: Number, require: true},
+    currency: {type: String, require: true},
+    tracking: {type: String,default: '', require: true},
+    envio_precio: {type: Number, require: true},
+    transaccion: {type: String, require: true},
+    cupon: {type: String, require: false},
+    metodo_pago: {type: String, require: true},
+    estado: {type: String, require: true},
+    tipo_descuento: {type: String, require: false},
+    valor_descuento: {type: String, require: false},
+    direccion: {type: Schema.ObjectId, ref: 'direccion', require: true},
+    nota: {type: String, require: false},
+    createdAt: {type:Date, default: Date.now, require: true}
 });
 
 module.exports = mongoose.model('venta', VentaSchema); ////para poder importarlo con un reqired

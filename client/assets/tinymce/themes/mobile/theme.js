@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.8.1 (2021-05-20)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -41,41 +41,6 @@
           r[k] = a[j];
       return r;
     }
-
-    var typeOf = function (x) {
-      var t = typeof x;
-      if (x === null) {
-        return 'null';
-      } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
-        return 'array';
-      } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
-        return 'string';
-      } else {
-        return t;
-      }
-    };
-    var isType = function (type) {
-      return function (value) {
-        return typeOf(value) === type;
-      };
-    };
-    var isSimpleType = function (type) {
-      return function (value) {
-        return typeof value === type;
-      };
-    };
-    var isString = isType('string');
-    var isObject = isType('object');
-    var isArray = isType('array');
-    var isBoolean = isSimpleType('boolean');
-    var isNullable = function (a) {
-      return a === null || a === undefined;
-    };
-    var isNonNullable = function (a) {
-      return !isNullable(a);
-    };
-    var isFunction = isSimpleType('function');
-    var isNumber = isSimpleType('number');
 
     var noop = function () {
     };
@@ -275,6 +240,41 @@
       from: from
     };
 
+    var typeOf = function (x) {
+      var t = typeof x;
+      if (x === null) {
+        return 'null';
+      } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
+        return 'array';
+      } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
+        return 'string';
+      } else {
+        return t;
+      }
+    };
+    var isType = function (type) {
+      return function (value) {
+        return typeOf(value) === type;
+      };
+    };
+    var isSimpleType = function (type) {
+      return function (value) {
+        return typeof value === type;
+      };
+    };
+    var isString = isType('string');
+    var isObject = isType('object');
+    var isArray = isType('array');
+    var isBoolean = isSimpleType('boolean');
+    var isNullable = function (a) {
+      return a === null || a === undefined;
+    };
+    var isNonNullable = function (a) {
+      return !isNullable(a);
+    };
+    var isFunction = isSimpleType('function');
+    var isNumber = isSimpleType('number');
+
     var nativeSlice = Array.prototype.slice;
     var nativeIndexOf = Array.prototype.indexOf;
     var nativePush = Array.prototype.push;
@@ -399,11 +399,8 @@
       copy.sort(comparator);
       return copy;
     };
-    var get = function (xs, i) {
-      return i >= 0 && i < xs.length ? Optional.some(xs[i]) : Optional.none();
-    };
     var head = function (xs) {
-      return get(xs, 0);
+      return xs.length === 0 ? Optional.none() : Optional.some(xs[0]);
     };
     var findMap = function (arr, f) {
       for (var i = 0; i < arr.length; i++) {
@@ -999,7 +996,7 @@
     };
 
     var isShadowRoot = function (dos) {
-      return isDocumentFragment(dos) && isNonNullable(dos.dom.host);
+      return isDocumentFragment(dos);
     };
     var supported = isFunction(Element.prototype.attachShadow) && isFunction(Node.prototype.getRootNode);
     var isSupported = constant(supported);
@@ -1203,7 +1200,7 @@
         return v;
       });
     };
-    var get$1 = function (obj, key) {
+    var get = function (obj, key) {
       return has(obj, key) ? Optional.from(obj[key]) : Optional.none();
     };
     var has = function (obj, key) {
@@ -1230,12 +1227,12 @@
         rawSet(dom, k, v);
       });
     };
-    var get$2 = function (element, key) {
+    var get$1 = function (element, key) {
       var v = element.dom.getAttribute(key);
       return v === null ? undefined : v;
     };
     var getOpt = function (element, key) {
-      return Optional.from(get$2(element, key));
+      return Optional.from(get$1(element, key));
     };
     var has$1 = function (element, key) {
       var dom = element.dom;
@@ -1246,7 +1243,7 @@
     };
 
     var read = function (element, attr) {
-      var value = get$2(element, attr);
+      var value = get$1(element, attr);
       return value === undefined || value === '' ? [] : value.split(' ');
     };
     var add = function (element, attr, id) {
@@ -1270,7 +1267,7 @@
     var supports = function (element) {
       return element.dom.classList !== undefined;
     };
-    var get$3 = function (element) {
+    var get$2 = function (element) {
       return read(element, 'class');
     };
     var add$1 = function (element, clazz) {
@@ -1288,7 +1285,7 @@
       }
     };
     var cleanClass = function (element) {
-      var classList = supports(element) ? element.dom.classList : get$3(element);
+      var classList = supports(element) ? element.dom.classList : get$2(element);
       if (classList.length === 0) {
         remove$1(element, 'class');
       }
@@ -1557,13 +1554,13 @@
         }
         constructors.push(key);
         adt[key] = function () {
-          var args = [];
-          for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-          }
-          var argLength = args.length;
+          var argLength = arguments.length;
           if (argLength !== value.length) {
             throw new Error('Wrong number of arguments to case ' + key + '. Expected ' + value.length + ' (' + value + '), got ' + argLength);
+          }
+          var args = new Array(argLength);
+          for (var i = 0; i < args.length; i++) {
+            args[i] = arguments[i];
           }
           var match = function (branches) {
             var branchKeys = keys(branches);
@@ -1580,14 +1577,10 @@
           };
           return {
             fold: function () {
-              var foldArgs = [];
-              for (var _i = 0; _i < arguments.length; _i++) {
-                foldArgs[_i] = arguments[_i];
+              if (arguments.length !== cases.length) {
+                throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
               }
-              if (foldArgs.length !== cases.length) {
-                throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + foldArgs.length);
-              }
-              var target = foldArgs[count];
+              var target = arguments[count];
               return target.apply(null, args);
             },
             match: match,
@@ -1615,9 +1608,9 @@
     };
     var baseMerge = function (merger) {
       return function () {
-        var objects = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-          objects[_i] = arguments[_i];
+        var objects = new Array(arguments.length);
+        for (var i = 0; i < objects.length; i++) {
+          objects[i] = arguments[i];
         }
         if (objects.length === 0) {
           throw new Error('Can\'t merge zero objects');
@@ -1823,21 +1816,21 @@
       }
     ]);
     var strictAccess = function (path, obj, key) {
-      return get$1(obj, key).fold(function () {
+      return get(obj, key).fold(function () {
         return missingStrict(path, key, obj);
       }, SimpleResult.svalue);
     };
     var fallbackAccess = function (obj, key, fallbackThunk) {
-      var v = get$1(obj, key).fold(function () {
+      var v = get(obj, key).fold(function () {
         return fallbackThunk(obj);
       }, identity);
       return SimpleResult.svalue(v);
     };
     var optionAccess = function (obj, key) {
-      return SimpleResult.svalue(get$1(obj, key));
+      return SimpleResult.svalue(get(obj, key));
     };
     var optionDefaultedAccess = function (obj, key, fallback) {
-      var opt = get$1(obj, key).map(function (val) {
+      var opt = get(obj, key).map(function (val) {
         return val === true ? fallback(obj) : val;
       });
       return SimpleResult.svalue(opt);
@@ -1988,7 +1981,7 @@
     var field = adt$1.field;
 
     var chooseFrom = function (path, strength, input, branches, ch) {
-      var fields = get$1(branches, ch);
+      var fields = get(branches, ch);
       return fields.fold(function () {
         return missingBranch(path, branches, ch);
       }, function (vp) {
@@ -1997,7 +1990,7 @@
     };
     var choose = function (key, branches) {
       var extract = function (path, strength, input) {
-        var choice = get$1(input, key);
+        var choice = get(input, key);
         return choice.fold(function () {
           return missingKey(path, key);
         }, function (chosen) {
@@ -2173,8 +2166,8 @@
     };
     var read$1 = function (handler) {
       return isFunction(handler) ? {
-        can: always,
-        abort: never,
+        can: constant(true),
+        abort: constant(false),
         run: handler
       } : handler;
     };
@@ -2416,18 +2409,22 @@
             }
           };
         },
-        schema: constant(schemaSchema),
+        schema: function () {
+          return schemaSchema;
+        },
         exhibit: function (info, base) {
           return getConfig(info).bind(function (behaviourInfo) {
-            return get$1(active, 'exhibit').map(function (exhibitor) {
+            return get(active, 'exhibit').map(function (exhibitor) {
               return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
             });
           }).getOr(nu$5({}));
         },
-        name: constant(name),
+        name: function () {
+          return name;
+        },
         handlers: function (info) {
           return getConfig(info).map(function (behaviourInfo) {
-            var getEvents = get$1(active, 'events').getOr(function () {
+            var getEvents = get(active, 'events').getOr(function () {
               return {};
             });
             return getEvents(behaviourInfo.config, behaviourInfo.state);
@@ -2696,7 +2693,7 @@
       return children(SugarElement.fromDom(div));
     };
 
-    var get$4 = function (element) {
+    var get$3 = function (element) {
       return element.dom.innerHTML;
     };
     var set$1 = function (element, content) {
@@ -2712,7 +2709,7 @@
       var container = SugarElement.fromTag('div');
       var clone = SugarElement.fromDom(element.dom.cloneNode(true));
       append(container, clone);
-      return get$4(container);
+      return get$3(container);
     };
 
     var clone = function (original, isDeep) {
@@ -2723,12 +2720,8 @@
     };
 
     var getHtml = function (element) {
-      if (isShadowRoot(element)) {
-        return '#shadow-root';
-      } else {
-        var clone = shallow$1(element);
-        return getOuter(clone);
-      }
+      var clone = shallow$1(element);
+      return getOuter(clone);
     };
 
     var element = function (elem) {
@@ -2836,7 +2829,7 @@
       };
     };
     var processEvent = function (eventName, initialTarget, f) {
-      var status = get$1(eventConfig.get(), eventName).orThunk(function () {
+      var status = get(eventConfig.get(), eventName).orThunk(function () {
         var patterns = keys(eventConfig.get());
         return findMap(patterns, function (p) {
           return eventName.indexOf(p) > -1 ? Optional.some(eventConfig.get()[p]) : Optional.none();
@@ -3215,7 +3208,7 @@
         internalSet(dom, k, v);
       });
     };
-    var get$5 = function (element, property) {
+    var get$4 = function (element, property) {
       var dom = element.dom;
       var styles = window.getComputedStyle(dom);
       var r = styles.getPropertyValue(property);
@@ -3242,7 +3235,7 @@
       return e.dom.offsetWidth;
     };
 
-    var Dimension = function (name, getOffset) {
+    function Dimension (name, getOffset) {
       var set = function (element, h) {
         if (!isNumber(h) && !h.match(/^[0-9]+$/)) {
           throw new Error(name + '.set accepts only positive integer values. Value was ' + h);
@@ -3255,7 +3248,7 @@
       var get = function (element) {
         var r = getOffset(element);
         if (r <= 0 || r === null) {
-          var css = get$5(element, name);
+          var css = get$4(element, name);
           return parseFloat(css) || 0;
         }
         return r;
@@ -3263,7 +3256,7 @@
       var getOuter = get;
       var aggregate = function (element, properties) {
         return foldl(properties, function (acc, property) {
-          var val = get$5(element, property);
+          var val = get$4(element, property);
           var value = val === undefined ? 0 : parseInt(val, 10);
           return isNaN(value) ? acc : acc + value;
         }, 0);
@@ -3280,13 +3273,13 @@
         aggregate: aggregate,
         max: max
       };
-    };
+    }
 
     var api = Dimension('height', function (element) {
       var dom = element.dom;
       return inBody(element) ? dom.getBoundingClientRect().height : dom.offsetHeight;
     });
-    var get$6 = function (element) {
+    var get$5 = function (element) {
       return api.get(element);
     };
 
@@ -3315,13 +3308,7 @@
     };
 
     function ClosestOrAncestor (is, ancestor, scope, a, isRoot) {
-      if (is(scope, a)) {
-        return Optional.some(scope);
-      } else if (isFunction(isRoot) && isRoot(scope)) {
-        return Optional.none();
-      } else {
-        return ancestor(scope, a, isRoot);
-      }
+      return is(scope, a) ? Optional.some(scope) : isFunction(isRoot) && isRoot(scope) ? Optional.none() : ancestor(scope, a, isRoot);
     }
 
     var ancestor$1 = function (scope, predicate, isRoot) {
@@ -3448,13 +3435,7 @@
 
     var cycleBy = function (value, delta, min, max) {
       var r = value + delta;
-      if (r > max) {
-        return min;
-      } else if (r < min) {
-        return max;
-      } else {
-        return r;
-      }
+      return r > max ? min : r < min ? max : r;
     };
     var clamp = function (value, min, max) {
       return Math.min(Math.max(value, min), max);
@@ -3530,7 +3511,7 @@
     };
     var highlightAt = function (component, hConfig, hState, index) {
       getByIndex(component, hConfig, hState, index).fold(function (err) {
-        throw err;
+        throw new Error(err);
       }, function (firstComp) {
         highlight$1(component, hConfig, hState, firstComp);
       });
@@ -3553,7 +3534,7 @@
     var getByIndex = function (component, hConfig, hState, index) {
       var items = descendants(component.element, '.' + hConfig.itemClass);
       return Optional.from(items[index]).fold(function () {
-        return Result.error(new Error('No element found with index ' + index));
+        return Result.error('No element found with index ' + index);
       }, component.getSystem().getByDom);
     };
     var getFirst = function (component, hConfig, _hState) {
@@ -3752,7 +3733,7 @@
         var target = tabbingConfig.visibilitySelector.bind(function (sel) {
           return closest$2(element, sel);
         }).getOr(element);
-        return get$6(target) > 0;
+        return get$5(target) > 0;
       };
       var findInitial = function (component, tabbingConfig) {
         var tabstops = descendants(component.element, tabbingConfig.selector);
@@ -3834,7 +3815,7 @@
     var CyclicType = create$2(state$1('cyclic', always));
 
     var inside = function (target) {
-      return name(target) === 'input' && get$2(target, 'type') !== 'radio' || name(target) === 'textarea';
+      return name(target) === 'input' && get$1(target, 'type') !== 'radio' || name(target) === 'textarea';
     };
 
     var doDefaultExecute = function (component, _simulatedEvent, focused) {
@@ -3927,7 +3908,7 @@
       };
     };
     var getDirection = function (element) {
-      return get$5(element, 'direction') === 'rtl' ? 'rtl' : 'ltr';
+      return get$4(element, 'direction') === 'rtl' ? 'rtl' : 'ltr';
     };
 
     var useH = function (movement) {
@@ -4098,7 +4079,7 @@
 
     var horizontal = function (container, selector, current, delta) {
       var isDisabledButton = function (candidate) {
-        return name(candidate) === 'button' && get$2(candidate, 'disabled') === 'disabled';
+        return name(candidate) === 'button' && get$1(candidate, 'disabled') === 'disabled';
       };
       var tryCycle = function (initial, index, candidates) {
         var newIndex = cycleBy(index, delta, 0, candidates.length - 1);
@@ -4445,7 +4426,7 @@
         return forbid(f.name(), 'Cannot configure ' + f.name() + ' for ' + name);
       }).concat([state$1('dump', identity)]));
     };
-    var get$7 = function (data) {
+    var get$6 = function (data) {
       return data.dump;
     };
     var augment = function (data, original) {
@@ -4454,7 +4435,7 @@
     var SketchBehaviours = {
       field: field$1,
       augment: augment,
-      get: get$7
+      get: get$6
     };
 
     var _placeholder = 'placeholder';
@@ -4481,7 +4462,7 @@
         })) {
         return adt$2.single(true, constant(compSpec));
       }
-      return get$1(placeholders, compSpec.name).fold(function () {
+      return get(placeholders, compSpec.name).fold(function () {
         throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' + keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + JSON.stringify(compSpec, null, 2));
       }, function (newSpec) {
         return newSpec.replace();
@@ -4498,7 +4479,7 @@
       var base = scan(owner, detail, compSpec, placeholders);
       return base.fold(function (req, valueThunk) {
         var value = isSubstituted(compSpec) ? valueThunk(detail, compSpec.config, compSpec.validated) : valueThunk(detail);
-        var childSpecs = get$1(value, 'components').getOr([]);
+        var childSpecs = get(value, 'components').getOr([]);
         var substituted = bind(childSpecs, function (c) {
           return substitute(owner, detail, c, placeholders);
         });
@@ -4753,7 +4734,7 @@
       return wrap$1(premadeTag, comp);
     };
     var getPremade = function (spec) {
-      return get$1(spec, premadeTag);
+      return get(spec, premadeTag);
     };
     var makeApi = function (f) {
       return markAsSketchApi(function (component) {
@@ -4828,9 +4809,9 @@
       return hasUid(spec) ? spec : __assign(__assign({}, spec), { uid: generate$3('uid') });
     };
 
-    var isSketchSpec = function (spec) {
+    function isSketchSpec(spec) {
       return spec.uid !== undefined;
-    };
+    }
     var singleSchema = objOfOnly([
       strict$1('name'),
       strict$1('factory'),
@@ -4884,8 +4865,8 @@
       var events = events$2(detail.action);
       var tag = detail.dom.tag;
       var lookupAttr = function (attr) {
-        return get$1(detail.dom, 'attributes').bind(function (attrs) {
-          return get$1(attrs, attr);
+        return get(detail.dom, 'attributes').bind(function (attrs) {
+          return get(attrs, attr);
         });
       };
       var getModAttributes = function () {
@@ -4980,7 +4961,7 @@
       var children$1 = children(elem);
       var attrs = getAttrs(elem);
       var classes = getClasses(elem);
-      var contents = children$1.length === 0 ? {} : { innerHtml: get$4(elem) };
+      var contents = children$1.length === 0 ? {} : { innerHtml: get$3(elem) };
       return __assign({
         tag: name(elem),
         classes: classes,
@@ -5220,7 +5201,8 @@
       });
     };
     var manual = function () {
-      var readState = noop;
+      var readState = function () {
+      };
       return nu$6({ readState: readState });
     };
     var dataset = function () {
@@ -5238,8 +5220,8 @@
         dataByText.set({});
       };
       var lookup = function (itemString) {
-        return get$1(dataByValue.get(), itemString).orThunk(function () {
-          return get$1(dataByText.get(), itemString);
+        return get(dataByValue.get(), itemString).orThunk(function () {
+          return get(dataByText.get(), itemString);
         });
       };
       var update = function (items) {
@@ -5249,8 +5231,8 @@
         var newDataByText = {};
         each(items, function (item) {
           newDataByValue[item.value] = item;
-          get$1(item, 'meta').each(function (meta) {
-            get$1(meta, 'text').each(function (text) {
+          get(item, 'meta').each(function (meta) {
+            get(meta, 'text').each(function (text) {
               newDataByText[text] = item;
             });
           });
@@ -5398,7 +5380,7 @@
     var set$4 = function (element, h) {
       return api$1.set(element, h);
     };
-    var get$8 = function (element) {
+    var get$7 = function (element) {
       return api$1.get(element);
     };
 
@@ -5728,7 +5710,9 @@
     };
     var handleMovement = function (direction) {
       return function (spectrum, detail) {
-        return moveBy(direction, spectrum, detail).map(always);
+        return moveBy(direction, spectrum, detail).map(function () {
+          return true;
+        });
       };
     };
     var getValueFromEvent = function (simulatedEvent) {
@@ -5769,7 +5753,7 @@
     var setPositionFromValue = function (slider, thumb, detail, edges) {
       var value = currentValue(detail);
       var pos = findPositionOfValue(slider, edges.getSpectrum(slider), value.x, edges.getLeftEdge(slider), edges.getRightEdge(slider), detail);
-      var thumbRadius = get$8(thumb.element) / 2;
+      var thumbRadius = get$7(thumb.element) / 2;
       set$3(thumb.element, 'left', pos - thumbRadius + 'px');
     };
     var onLeft = handleMovement(-1);
@@ -5849,7 +5833,9 @@
     };
     var handleMovement$1 = function (direction) {
       return function (spectrum, detail) {
-        return moveBy$1(direction, spectrum, detail).map(always);
+        return moveBy$1(direction, spectrum, detail).map(function () {
+          return true;
+        });
       };
     };
     var getValueFromEvent$1 = function (simulatedEvent) {
@@ -5890,7 +5876,7 @@
     var setPositionFromValue$1 = function (slider, thumb, detail, edges) {
       var value = currentValue(detail);
       var pos = findPositionOfValue$1(slider, edges.getSpectrum(slider), value.y, edges.getTopEdge(slider), edges.getBottomEdge(slider), detail);
-      var thumbRadius = get$6(thumb.element) / 2;
+      var thumbRadius = get$5(thumb.element) / 2;
       set$3(thumb.element, 'top', pos - thumbRadius + 'px');
     };
     var onLeft$1 = Optional.none;
@@ -5949,7 +5935,9 @@
     };
     var handleMovement$2 = function (direction, isVerticalMovement) {
       return function (spectrum, detail) {
-        return moveBy$2(direction, isVerticalMovement, spectrum, detail).map(always);
+        return moveBy$2(direction, isVerticalMovement, spectrum, detail).map(function () {
+          return true;
+        });
       };
     };
     var setToMin$2 = function (spectrum, detail) {
@@ -5969,8 +5957,8 @@
       var value = currentValue(detail);
       var xPos = findPositionOfValue(slider, edges.getSpectrum(slider), value.x, edges.getLeftEdge(slider), edges.getRightEdge(slider), detail);
       var yPos = findPositionOfValue$1(slider, edges.getSpectrum(slider), value.y, edges.getTopEdge(slider), edges.getBottomEdge(slider), detail);
-      var thumbXRadius = get$8(thumb.element) / 2;
-      var thumbYRadius = get$6(thumb.element) / 2;
+      var thumbXRadius = get$7(thumb.element) / 2;
+      var thumbYRadius = get$5(thumb.element) / 2;
       set$3(thumb.element, 'left', xPos - thumbXRadius + 'px');
       set$3(thumb.element, 'top', yPos - thumbYRadius + 'px');
     };
@@ -6089,14 +6077,10 @@
           getSpectrum: getSpectrum
         });
       };
-      var setValue = function (slider, newValue) {
+      var changeValue = function (slider, newValue) {
         modelDetail.value.set(newValue);
         var thumb = getThumb(slider);
         refresh(slider, thumb);
-      };
-      var changeValue = function (slider, newValue) {
-        setValue(slider, newValue);
-        var thumb = getThumb(slider);
         detail.onChange(slider, thumb, newValue);
         return Optional.some(true);
       };
@@ -6170,7 +6154,7 @@
         apis: {
           resetToMin: resetToMin,
           resetToMax: resetToMax,
-          setValue: setValue,
+          changeValue: changeValue,
           refresh: refresh
         },
         domModification: { styles: { position: 'relative' } }
@@ -6183,9 +6167,6 @@
       partFields: SliderParts,
       factory: sketch,
       apis: {
-        setValue: function (apis, slider, value) {
-          apis.setValue(slider, value);
-        },
         resetToMin: function (apis, slider) {
           apis.resetToMin(slider);
         },
@@ -6315,7 +6296,7 @@
           return getRaw(elem, 'font-size');
         });
         return inline.getOrThunk(function () {
-          return get$5(start, 'font-size');
+          return get$4(start, 'font-size');
         });
       }).getOr('');
     };
@@ -6337,7 +6318,7 @@
         editor.execCommand('fontSize', false, value);
       }
     };
-    var get$9 = function (editor) {
+    var get$8 = function (editor) {
       var size = getSize(editor);
       return sizeToIndex(size).getOr(defaultIndex);
     };
@@ -6427,7 +6408,7 @@
           apply$1(editor, value);
         },
         getInitialValue: function () {
-          return get$9(editor);
+          return get$8(editor);
         }
       };
       return button(realm, 'font-size', function () {
@@ -6468,17 +6449,13 @@
       };
       var anyWindow = window;
       var asap = Promise.immediateFn || typeof anyWindow.setImmediate === 'function' && anyWindow.setImmediate || function (fn) {
-        return setTimeout(fn, 1);
+        setTimeout(fn, 1);
       };
-      var bind = function (fn, thisArg) {
+      function bind(fn, thisArg) {
         return function () {
-          var args = [];
-          for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-          }
-          return fn.apply(thisArg, args);
+          return fn.apply(thisArg, arguments);
         };
-      };
+      }
       var isArray = Array.isArray || function (value) {
         return Object.prototype.toString.call(value) === '[object Array]';
       };
@@ -6541,7 +6518,7 @@
         this.resolve = resolve;
         this.reject = reject;
       }
-      var doResolve = function (fn, onFulfilled, onRejected) {
+      function doResolve(fn, onFulfilled, onRejected) {
         var done = false;
         try {
           fn(function (value) {
@@ -6564,7 +6541,7 @@
           done = true;
           onRejected(ex);
         }
-      };
+      }
       Promise.prototype.catch = function (onRejected) {
         return this.then(null, onRejected);
       };
@@ -6585,7 +6562,7 @@
             return resolve([]);
           }
           var remaining = args.length;
-          var res = function (i, val) {
+          function res(i, val) {
             try {
               if (val && (typeof val === 'object' || typeof val === 'function')) {
                 var then = val.then;
@@ -6603,7 +6580,7 @@
             } catch (ex) {
               reject(ex);
             }
-          };
+          }
           for (var i = 0; i < args.length; i++) {
             res(i, args[i]);
           }
@@ -6634,7 +6611,7 @@
     };
     var Promise = window.Promise ? window.Promise : promise();
 
-    var blobToDataUri = function (blob) {
+    function blobToDataUri(blob) {
       return new Promise(function (resolve) {
         var reader = new FileReader();
         reader.onloadend = function () {
@@ -6642,12 +6619,12 @@
         };
         reader.readAsDataURL(blob);
       });
-    };
-    var blobToBase64 = function (blob) {
+    }
+    function blobToBase64(blob) {
       return blobToDataUri(blob).then(function (dataUri) {
         return dataUri.split(',')[1];
       });
-    };
+    }
 
     var blobToBase64$1 = function (blob) {
       return blobToBase64(blob);
@@ -6703,7 +6680,7 @@
       });
     };
 
-    var get$a = function (element) {
+    var get$9 = function (element) {
       return element.dom.textContent;
     };
     var set$5 = function (element, value) {
@@ -6727,10 +6704,10 @@
       };
     };
     var fromLink = function (link) {
-      var text = get$a(link);
-      var url = get$2(link, 'href');
-      var title = get$2(link, 'title');
-      var target = get$2(link, 'target');
+      var text = get$9(link);
+      var url = get$1(link, 'href');
+      var title = get$1(link, 'title');
+      var target = get$1(link, 'target');
       return {
         url: defaultToEmpty(url),
         text: text !== url ? defaultToEmpty(text) : '',
@@ -6747,8 +6724,8 @@
       });
     };
     var wasSimple = function (link) {
-      var prevHref = get$2(link, 'href');
-      var prevText = get$a(link);
+      var prevHref = get$1(link, 'href');
+      var prevText = get$9(link);
       return prevHref === prevText;
     };
     var getTextToApply = function (link, url, info) {
@@ -6855,7 +6832,7 @@
           attributes: __assign({ role: 'presentation' }, attributes)
         }, domWithoutAttributes),
         components: detail.components,
-        behaviours: get$7(detail.containerBehaviours),
+        behaviours: get$6(detail.containerBehaviours),
         events: detail.events,
         domModification: detail.domModification,
         eventOrder: detail.eventOrder
@@ -6905,7 +6882,7 @@
       ]
     });
 
-    var get$b = function (element) {
+    var get$a = function (element) {
       return element.dom.value;
     };
     var set$6 = function (element, value) {
@@ -6934,7 +6911,7 @@
       return derive$1([Focusing.config({
           onFocus: !detail.selectOnFocus ? noop : function (component) {
             var input = component.element;
-            var value = get$b(input);
+            var value = get$a(input);
             input.dom.setSelectionRange(0, value.length);
           }
         })]);
@@ -6945,10 +6922,10 @@
             return { initialValue: data };
           }).getOr({})), {
             getValue: function (input) {
-              return get$b(input.element);
+              return get$a(input.element);
             },
             setValue: function (input, data) {
-              var current = get$b(input.element);
+              var current = get$a(input.element);
               if (current !== data) {
                 set$6(input.element, data);
               }
@@ -7089,7 +7066,7 @@
       remove$1(component.element, 'disabled');
     };
     var ariaIsDisabled = function (component) {
-      return get$2(component.element, 'aria-disabled') === 'true';
+      return get$1(component.element, 'aria-disabled') === 'true';
     };
     var ariaDisable = function (component) {
       set(component.element, 'aria-disabled', 'true');
@@ -7372,7 +7349,7 @@
           if (spec$1.state.currentScreen.get() + direction >= 0 && spec$1.state.currentScreen.get() + direction < screens.length) {
             getRaw(parent, 'left').each(function (left) {
               var currentLeft = parseInt(left, 10);
-              var w = get$8(screens[0]);
+              var w = get$7(screens[0]);
               set$3(parent, 'left', currentLeft - direction * w + 'px');
             });
             spec$1.state.currentScreen.set(spec$1.state.currentScreen.get() + direction);
@@ -7629,7 +7606,7 @@
       var r = {};
       each$1(data, function (detail, key) {
         each$1(detail, function (value, indexKey) {
-          var chain = get$1(r, indexKey).getOr([]);
+          var chain = get(r, indexKey).getOr([]);
           r[indexKey] = chain.concat([tuple(key, value)]);
         });
       });
@@ -7891,7 +7868,7 @@
     };
 
     var getBehaviours$1 = function (spec) {
-      var behaviours = get$1(spec, 'behaviours').getOr({});
+      var behaviours = get(spec, 'behaviours').getOr({});
       var keys$1 = filter(keys(behaviours), function (k) {
         return behaviours[k] !== undefined;
       });
@@ -7984,7 +7961,7 @@
     };
 
     var buildSubcomponents = function (spec) {
-      var components = get$1(spec, 'components').getOr([]);
+      var components = get(spec, 'components').getOr([]);
       return map(components, build$1);
     };
     var buildFromSpec = function (userSpec) {
@@ -8124,7 +8101,9 @@
       output('builder', builder$1)
     ];
 
-    var owner$2 = constant('item-widget');
+    var owner$2 = function () {
+      return 'item-widget';
+    };
     var parts = constant([required({
         name: 'widget',
         overrides: function (detail) {
@@ -8135,7 +8114,8 @@
                   getValue: function (_component) {
                     return detail.data;
                   },
-                  setValue: noop
+                  setValue: function () {
+                  }
                 }
               })])
           };
@@ -8463,8 +8443,8 @@
       });
     };
     var trace = function (items, byItem, byMenu, finish) {
-      return get$1(byMenu, finish).bind(function (triggerItem) {
-        return get$1(items, triggerItem).bind(function (triggerMenu) {
+      return get(byMenu, finish).bind(function (triggerItem) {
+        return get(items, triggerItem).bind(function (triggerMenu) {
           var rest = trace(items, byItem, byMenu, triggerMenu);
           return Optional.some([triggerMenu].concat(rest));
         });
@@ -8483,7 +8463,7 @@
         return [submenu].concat(trace(items, byItem, byMenu, submenu));
       });
       return map$1(items, function (menu) {
-        return get$1(menuPaths, menu).getOr([menu]);
+        return get(menuPaths, menu).getOr([menu]);
       });
     };
 
@@ -8539,7 +8519,7 @@
         var extraPath = filter(lookupItem(itemValue).toArray(), function (menuValue) {
           return getPreparedMenu(menuValue).isSome();
         });
-        return get$1(paths.get(), itemValue).bind(function (path) {
+        return get(paths.get(), itemValue).bind(function (path) {
           var revPath = reverse(extraPath.concat(path));
           var triggers = bind(revPath, function (menuValue, menuIndex) {
             return getTriggerData(menuValue, getItemByValue, revPath.slice(0, menuIndex + 1)).fold(function () {
@@ -8552,27 +8532,27 @@
         });
       };
       var expand = function (itemValue) {
-        return get$1(expansions.get(), itemValue).map(function (menu) {
-          var current = get$1(paths.get(), itemValue).getOr([]);
+        return get(expansions.get(), itemValue).map(function (menu) {
+          var current = get(paths.get(), itemValue).getOr([]);
           return [menu].concat(current);
         });
       };
       var collapse = function (itemValue) {
-        return get$1(paths.get(), itemValue).bind(function (path) {
+        return get(paths.get(), itemValue).bind(function (path) {
           return path.length > 1 ? Optional.some(path.slice(1)) : Optional.none();
         });
       };
       var refresh = function (itemValue) {
-        return get$1(paths.get(), itemValue);
+        return get(paths.get(), itemValue);
       };
       var getPreparedMenu = function (menuValue) {
         return lookupMenu(menuValue).bind(extractPreparedMenu);
       };
       var lookupMenu = function (menuValue) {
-        return get$1(menus.get(), menuValue);
+        return get(menus.get(), menuValue);
       };
       var lookupItem = function (itemValue) {
-        return get$1(expansions.get(), itemValue);
+        return get(expansions.get(), itemValue);
       };
       var otherMenus = function (path) {
         var menuValues = directory.get();
@@ -8687,7 +8667,7 @@
           var r = {};
           var items = descendants(container.element, '.' + detail.markers.item);
           var parentItems = filter(items, function (i) {
-            return get$2(i, 'aria-haspopup') === 'true';
+            return get$1(i, 'aria-haspopup') === 'true';
           });
           each(parentItems, function (i) {
             container.getSystem().getByDom(i).each(function (itemComp) {
@@ -8801,7 +8781,9 @@
         return function (container, simulatedEvent) {
           return closest$2(simulatedEvent.getSource(), '.' + detail.markers.item).bind(function (target) {
             return container.getSystem().getByDom(target).toOptional().bind(function (item) {
-              return f(container, item).map(always);
+              return f(container, item).map(function () {
+                return true;
+              });
             });
           });
         };
@@ -8827,7 +8809,8 @@
             }
             expandRight(component, item, ExpandHighlightDecision.HighlightSubmenu).fold(function () {
               detail.onExecute(component, item);
-            }, noop);
+            }, function () {
+            });
           });
         }),
         runOnAttached(function (container, _simulatedEvent) {
@@ -8860,7 +8843,7 @@
       };
       var extractMenuFromContainer = function (container) {
         return Optional.from(container.components()[0]).filter(function (comp) {
-          return get$2(comp.element, 'role') === 'menu';
+          return get$1(comp.element, 'role') === 'menu';
         });
       };
       var repositionMenus = function (container) {
@@ -8997,8 +8980,8 @@
     });
 
     var findRoute = function (component, transConfig, transState, route) {
-      return get$1(transConfig.routes, route.start).bind(function (sConfig) {
-        return get$1(sConfig, route.destination);
+      return get(transConfig.routes, route.start).bind(function (sConfig) {
+        return get(sConfig, route.destination);
       });
     };
     var getTransition = function (comp, transConfig, transState) {
@@ -9026,7 +9009,7 @@
     };
     var getNewRoute = function (comp, transConfig, transState, destination) {
       return {
-        start: get$2(comp.element, transConfig.stateAttr),
+        start: get$1(comp.element, transConfig.stateAttr),
         destination: destination
       };
     };
@@ -9034,14 +9017,14 @@
       var el = comp.element;
       return getOpt(el, transConfig.destinationAttr).map(function (destination) {
         return {
-          start: get$2(comp.element, transConfig.stateAttr),
+          start: get$1(comp.element, transConfig.stateAttr),
           destination: destination
         };
       });
     };
     var jumpTo = function (comp, transConfig, transState, destination) {
       disableTransition(comp, transConfig, transState);
-      if (has$1(comp.element, transConfig.stateAttr) && get$2(comp.element, transConfig.stateAttr) !== destination) {
+      if (has$1(comp.element, transConfig.stateAttr) && get$1(comp.element, transConfig.stateAttr) !== destination) {
         transConfig.onFinish(comp, destination);
       }
       set(comp.element, transConfig.stateAttr, destination);
@@ -9204,7 +9187,7 @@
     var scrollable = scrollableStyle;
 
     var getValue$4 = function (item) {
-      return get$1(item, 'format').getOr(item.title);
+      return get(item, 'format').getOr(item.title);
     };
     var convert$1 = function (formats, memMenuThunk) {
       var mainMenu = makeMenu('Styles', [].concat(map(formats.items, function (k) {
@@ -9328,12 +9311,12 @@
           return Optional.none();
         },
         onOpenMenu: function (container, menu) {
-          var w = get$8(container.element);
+          var w = get$7(container.element);
           set$4(menu.element, w);
           Transitioning.jumpTo(menu, 'current');
         },
         onOpenSubmenu: function (container, item, submenu) {
-          var w = get$8(container.element);
+          var w = get$7(container.element);
           var menu = ancestor$2(item.element, '[role="menu"]').getOrDie('hacky');
           var menuComp = container.getSystem().getByDom(menu).getOrDie();
           set$4(submenu.element, w);
@@ -9647,13 +9630,13 @@
 
     var INTERVAL = 50;
     var INSURANCE = 1000 / INTERVAL;
-    var get$c = function (outerWindow) {
+    var get$b = function (outerWindow) {
       var isPortrait = outerWindow.matchMedia('(orientation: portrait)').matches;
       return { isPortrait: constant(isPortrait) };
     };
     var getActualWidth = function (outerWindow) {
       var isIos = detect$3().os.isiOS();
-      var isPortrait = get$c(outerWindow).isPortrait();
+      var isPortrait = get$b(outerWindow).isPortrait();
       return isIos && !isPortrait ? outerWindow.screen.height : outerWindow.screen.width;
     };
     var onChange = function (outerWindow, listeners) {
@@ -9661,7 +9644,7 @@
       var poller = null;
       var change = function () {
         global$4.clearInterval(poller);
-        var orientation = get$c(outerWindow);
+        var orientation = get$b(outerWindow);
         listeners.onChange(orientation);
         onAdjustment(function () {
           listeners.onReady(orientation);
@@ -9838,7 +9821,7 @@
     };
     var SimRange = { create: create$3 };
 
-    var NodeValue = function (is, name) {
+    function NodeValue (is, name) {
       var get = function (element) {
         if (!is(element)) {
           throw new Error('Can only get ' + name + ' value of a ' + name + ' node');
@@ -9859,7 +9842,7 @@
         getOption: getOption,
         set: set
       };
-    };
+    }
 
     var api$3 = NodeValue(isText, 'text');
     var getOption = function (element) {
@@ -10049,7 +10032,7 @@
         return sel.rangeCount > 0;
       }).bind(doGetExact);
     };
-    var get$d = function (win) {
+    var get$c = function (win) {
       return getExact(win).map(function (range) {
         return SimSelection.exact(range.start, range.soffset, range.finish, range.foffset);
       });
@@ -10116,7 +10099,7 @@
             var html = SugarElement.fromDom(doc.dom.documentElement);
             var getCursorBox = editor.getCursorBox.getOrThunk(function () {
               return function () {
-                return get$d(win).bind(function (sel) {
+                return get$c(win).bind(function (sel) {
                   return getFirstRect$1(win, sel).orThunk(function () {
                     return tryFallbackBox(win);
                   });
@@ -10170,7 +10153,7 @@
         return meta;
       };
       var element = first('meta[name="viewport"]').getOrThunk(nu);
-      var backup = get$2(element, 'content');
+      var backup = get$1(element, 'content');
       var maximize = function () {
         set(element, 'content', 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0');
       };
@@ -10194,7 +10177,7 @@
     var bgFallback = 'background-color:rgb(255,255,255)!important;';
     var isAndroid = detect$3().os.isAndroid();
     var matchColor = function (editorBody) {
-      var color = get$5(editorBody, 'background-color');
+      var color = get$4(editorBody, 'background-color');
       return color !== undefined && color !== '' ? 'background-color:' + color + '!important' : bgFallback;
     };
     var clobberStyles = function (container, editorBody) {
@@ -10203,7 +10186,7 @@
       };
       var clobber = function (clobberStyle) {
         return function (element) {
-          var styles = get$2(element, 'style');
+          var styles = get$1(element, 'style');
           var backup = styles === undefined ? 'no-styles' : styles.trim();
           if (backup === clobberStyle) {
             return;
@@ -10224,7 +10207,7 @@
     var restoreStyles = function () {
       var clobberedEls = all$2('[' + attr + ']');
       each(clobberedEls, function (element) {
-        var restore = get$2(element, attr);
+        var restore = get$1(element, attr);
         if (restore !== 'no-styles') {
           set(element, 'style', restore);
         } else {
@@ -10234,7 +10217,7 @@
       });
     };
 
-    var DelayedFunction = function (fun, delay) {
+    function DelayedFunction (fun, delay) {
       var ref = null;
       var schedule = function () {
         var args = [];
@@ -10256,7 +10239,7 @@
         cancel: cancel,
         schedule: schedule
       };
-    };
+    }
 
     var SIGNIFICANT_MOVE = 5;
     var LONGPRESS_DELAY = 400;
@@ -10333,7 +10316,7 @@
         }
       ]);
       var fireIfReady = function (event, type) {
-        return get$1(handlers, type).bind(function (handler) {
+        return get(handlers, type).bind(function (handler) {
           return handler(event);
         });
       };
@@ -10425,7 +10408,7 @@
     };
 
     var safeParse = function (element, attribute) {
-      var parsed = parseInt(get$2(element, attribute), 10);
+      var parsed = parseInt(get$1(element, attribute), 10);
       return isNaN(parsed) ? 0 : parsed;
     };
 
@@ -10819,7 +10802,7 @@
       set(container, dataHorizontal, 'true');
     };
     var hasScroll = function (container) {
-      return get$2(container, dataHorizontal) === 'true' ? hasHorizontalScroll(container) : hasVerticalScroll(container);
+      return get$1(container, dataHorizontal) === 'true' ? hasHorizontalScroll(container) : hasVerticalScroll(container);
     };
     var exclusive = function (scope, selector) {
       return bind$3(scope, 'touchmove', function (event) {
@@ -11051,7 +11034,7 @@
       return has$2(root, slideConfig.shrinkingClass) === true;
     };
     var isTransitioning = function (component, slideConfig, slideState) {
-      return isGrowing(component, slideConfig) || isShrinking(component, slideConfig);
+      return isGrowing(component, slideConfig) === true || isShrinking(component, slideConfig) === true;
     };
     var toggleGrow = function (component, slideConfig, slideState) {
       var f = slideState.isExpanded() ? doStartSmartShrink : doStartGrow;
@@ -11118,13 +11101,13 @@
         width: [
           output('property', 'width'),
           output('getDimension', function (elem) {
-            return get$8(elem) + 'px';
+            return get$7(elem) + 'px';
           })
         ],
         height: [
           output('property', 'height'),
           output('getDimension', function (elem) {
-            return get$6(elem) + 'px';
+            return get$5(elem) + 'px';
           })
         ]
       }))
@@ -11343,7 +11326,7 @@
     };
 
     var derive$2 = function (rawEvent, rawTarget) {
-      var source = get$1(rawEvent, 'target').getOr(rawTarget);
+      var source = get(rawEvent, 'target').getOr(rawTarget);
       return Cell(source);
     };
 
@@ -11415,9 +11398,13 @@
       });
     };
     var doTriggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget, source, logger) {
-      return doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(always, function (parent) {
+      return doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(function () {
+        return true;
+      }, function (parent) {
         return doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source, logger);
-      }, never);
+      }, function () {
+        return false;
+      });
     };
     var triggerHandler = function (lookup, eventType, rawEvent, target, logger) {
       var source = derive$2(rawEvent, target);
@@ -11452,7 +11439,7 @@
         descHandler: handler
       };
     };
-    var EventRegistry = function () {
+    function EventRegistry () {
       var registry = {};
       var registerId = function (extraArgs, id, events) {
         each$1(events, function (v, k) {
@@ -11466,21 +11453,21 @@
           return Optional.none();
         }, function (id) {
           return handlers.bind(function (h) {
-            return get$1(h, id);
+            return get(h, id);
           }).map(function (descHandler) {
             return eventHandler(elem, descHandler);
           });
         });
       };
       var filterByType = function (type) {
-        return get$1(registry, type).map(function (handlers) {
+        return get(registry, type).map(function (handlers) {
           return mapToArray(handlers, function (f, id) {
             return broadcastHandler(id, f);
           });
         }).getOr([]);
       };
       var find = function (isAboveRoot, type, target) {
-        var handlers = get$1(registry, type);
+        var handlers = get(registry, type);
         return closest(target, function (elem) {
           return findHandler(handlers, elem);
         }, isAboveRoot);
@@ -11498,9 +11485,9 @@
         filterByType: filterByType,
         find: find
       };
-    };
+    }
 
-    var Registry = function () {
+    function Registry () {
       var events = EventRegistry();
       var components = {};
       var readOrTag = function (component) {
@@ -11541,7 +11528,7 @@
         return events.find(isAboveRoot, type, target);
       };
       var getById = function (id) {
-        return get$1(components, id);
+        return get(components, id);
       };
       return {
         find: find,
@@ -11550,11 +11537,13 @@
         unregister: unregister,
         getById: getById
       };
-    };
+    }
 
     var takeover = function (root) {
       var isAboveRoot = function (el) {
-        return parent(root.element).fold(always, function (parent) {
+        return parent(root.element).fold(function () {
+          return true;
+        }, function (parent) {
           return eq(el, parent);
         });
       };
@@ -11816,7 +11805,8 @@
           toEditing();
         }
       });
-      var onToolbarTouch = noop;
+      var onToolbarTouch = function () {
+      };
       var destroy = function () {
         captureInput.unbind();
       };
@@ -11869,7 +11859,7 @@
         });
       };
       var reposition = function () {
-        var toolbarHeight = get$6(toolstrip);
+        var toolbarHeight = get$5(toolstrip);
         iosApi.run(function (api) {
           api.setViewportOffset(toolbarHeight);
         });
@@ -12712,7 +12702,7 @@
       return findDevice(outerWindow.screen.width, outerWindow.screen.height);
     };
     var accountableKeyboardHeight = function (outerWindow) {
-      var portrait = get$c(outerWindow).isPortrait();
+      var portrait = get$b(outerWindow).isPortrait();
       var limits = softKeyboardLimits(outerWindow);
       var keyboard = portrait ? limits.portrait : limits.landscape;
       var visualScreenHeight = portrait ? outerWindow.screen.height : outerWindow.screen.width;
@@ -12720,13 +12710,13 @@
     };
     var getGreenzone = function (socket, dropup) {
       var outerWindow = owner(socket).dom.defaultView;
-      var viewportHeight = get$6(socket) + get$6(dropup);
+      var viewportHeight = get$5(socket) + get$5(dropup);
       var acc = accountableKeyboardHeight(outerWindow);
       return viewportHeight - acc;
     };
     var updatePadding = function (contentBody, socket, dropup) {
       var greenzoneHeight = getGreenzone(socket, dropup);
-      var deltaHeight = get$6(socket) + get$6(dropup) - greenzoneHeight;
+      var deltaHeight = get$5(socket) + get$5(dropup) - greenzoneHeight;
       set$3(contentBody, 'padding-bottom', deltaHeight + 'px');
     };
 
@@ -12753,7 +12743,7 @@
       return safeParse(element, yFixedData);
     };
     var getYFixedProperty = function (element) {
-      return get$2(element, yFixedProperty);
+      return get$1(element, yFixedProperty);
     };
     var getLastWindowSize = function (element) {
       return safeParse(element, windowSizeData);
@@ -12767,7 +12757,7 @@
     };
     var classify = function (element) {
       var offsetY = getYFixedData(element);
-      var classifier = get$2(element, yScrollingData) === 'true' ? classifyScrolling : classifyFixed;
+      var classifier = get$1(element, yScrollingData) === 'true' ? classifyScrolling : classifyFixed;
       return classifier(element, offsetY);
     };
     var findFixtures = function (container) {
@@ -12775,7 +12765,7 @@
       return map(candidates, classify);
     };
     var takeoverToolbar = function (toolbar) {
-      var oldToolbarStyle = get$2(toolbar, 'style');
+      var oldToolbarStyle = get$1(toolbar, 'style');
       setAll$1(toolbar, {
         position: 'absolute',
         top: '0px'
@@ -12790,7 +12780,7 @@
       return { restore: restore };
     };
     var takeoverViewport = function (toolbarHeight, height, viewport) {
-      var oldViewportStyle = get$2(viewport, 'style');
+      var oldViewportStyle = get$1(viewport, 'style');
       register(viewport);
       setAll$1(viewport, {
         position: 'absolute',
@@ -12811,7 +12801,7 @@
       return { restore: restore };
     };
     var takeoverDropup = function (dropup) {
-      var oldDropupStyle = get$2(dropup, 'style');
+      var oldDropupStyle = get$1(dropup, 'style');
       setAll$1(dropup, {
         position: 'absolute',
         bottom: '0px'
@@ -12834,8 +12824,8 @@
     var takeover$1 = function (viewport, contentBody, toolbar, dropup) {
       var outerWindow = owner(viewport).dom.defaultView;
       var toolbarSetup = takeoverToolbar(toolbar);
-      var toolbarHeight = get$6(toolbar);
-      var dropupHeight = get$6(dropup);
+      var toolbarHeight = get$5(toolbar);
+      var dropupHeight = get$5(dropup);
       var viewportHeight = deriveViewportHeight(viewport, toolbarHeight, dropupHeight);
       var viewportSetup = takeoverViewport(toolbarHeight, viewportHeight, viewport);
       var dropupSetup = takeoverDropup(dropup);
@@ -12853,8 +12843,8 @@
       };
       var refresh = function () {
         if (isActive) {
-          var newToolbarHeight = get$6(toolbar);
-          var dropupHeight_1 = get$6(dropup);
+          var newToolbarHeight = get$5(toolbar);
+          var dropupHeight_1 = get$5(dropup);
           var newHeight = deriveViewportHeight(viewport, newToolbarHeight, dropupHeight_1);
           set(viewport, yFixedData, newToolbarHeight + 'px');
           set$3(viewport, 'height', newHeight + 'px');
@@ -12981,7 +12971,7 @@
         moveOnlyScroll(socket, socket.dom.scrollTop - greenzone + bottom).get(refreshCursor);
       } else if (top < 0) {
         moveOnlyScroll(socket, socket.dom.scrollTop + top).get(refreshCursor);
-      } else ;
+      }
     };
 
     var par = function (asyncValues, nu) {

@@ -5,6 +5,7 @@ var Schema = mongoose.Schema; //vamos a usar el metodo schema
 
 var CuponSchema = Schema({
     codigo: {type: String, required:true},
+    disponibilidad: {type: String, required: true},
     tipo: {type: String, required:true},//porcentaje | precio fijo
     valor: {type: Number, required:true},
     limite: {type: Number, required:true},

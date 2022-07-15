@@ -1,12 +1,13 @@
 'use strict'
 
 var Config = require('../models/config');
+var Variedad = require('../models/Variedad');
 var fs = require('fs');//modulo para archivos
 var path = require('path');//modulo para manejar imagenes
 
 
 
-const obtener_config_admin = async function(req, res){//async define una función asíncrona,
+/*const obtener_config_admin = async function(req, res){//async define una función asíncrona,
 
 //console.log(req.user);
 if (req.user) {//me llegaria del midelware  el usuario middlewares\authenticate.js
@@ -28,9 +29,12 @@ res.status(500).send({message:'NoAccess'});
 }
 
 
+}*/
+
+const obtener_config_admin = async (req,res)=>{
+    let config = await Config.find();
+    res.status(200).send({data:config});
 }
-
-
 
 
 const actualiza_config_admin = async function(req, res){//async define una función asíncrona,
@@ -57,7 +61,14 @@ titulo:data.titulo,
 serie:data.serie,
 logo:logo_name,
 correlativo:data.correlativo,
-
+banco:data.banco,
+cbu:data.cbu,
+tokenMercadoPago:data.tokenMercadoPago,
+clientIdPaypal:data.clientIdPaypal,
+envio_activacion : data.envio_activacion,
+lenguaje : data.lenguaje,
+monto_min_soles: data.monto_min_soles,
+monto_min_dolares : data.monto_min_dolares
 });//EN REG QEDA LO ANTERIOR
 
 //console.log('lo anteriror'+reg);
@@ -83,7 +94,15 @@ var data=req.body;//lo q me viene del formulario del body
 categorias:data.categorias,
 titulo:data.titulo,
 serie:data.serie,
-correlativo:data.correlativo
+correlativo:data.correlativo,
+banco:data.banco,
+cbu:data.cbu,
+tokenMercadoPago:data.tokenMercadoPago,
+clientIdPaypal:data.clientIdPaypal,
+lenguaje : data.lenguaje,
+envio_activacion : data.envio_activacion,
+monto_min_soles: data.monto_min_soles,
+monto_min_dolares : data.monto_min_dolares
 });
 
 res.status(200).send({data:reg});
@@ -127,6 +146,12 @@ const obtener_config_public = async function(req, res){//async define una funci�
 }
 
 
+const obtener_variedades_public = async function(req,res){
+    let variedades = await Variedad.find();
+    res.status(200).send({data:variedades});
+}
+
+
 
 
 
@@ -134,5 +159,6 @@ module.exports = {
     actualiza_config_admin,
     obtener_config_admin,
     obtener_logo,
-    obtener_config_public
+    obtener_config_public,
+    obtener_variedades_public
     }; //para poder importarlo con un reqired

@@ -1,9 +1,11 @@
 'use strict'
 
+var Admin = require('../models/admin');
 var Venta = require('../models/venta');
 var Dventa = require('../models/dventa');
 var Producto = require('../models/producto');
 var Carrito = require('../models/carrito');
+var Config = require('../models/config');
 
 //para el uso de los emails
 var fs = require('fs');
@@ -120,12 +122,14 @@ const enviar_correo_compra_cliente = async function(req, res){
     });
     };
 
+    var admin = await Admin.find();
+
     var transporter = nodemailer.createTransport(smtpTransport({
     service: 'gmail',
     host: 'smtp.gmail.com',
     auth: {
-    user: 'micuarzo1@gmail.com',
-    pass: 'gaupriupfvhrvypd'
+    user: admin[0].email,
+    pass: 'bblsujzfhkkbrhrs'
     }
     }));
 
@@ -133,6 +137,8 @@ const enviar_correo_compra_cliente = async function(req, res){
 
     var venta = await Venta.findById({_id:id}).populate('cliente');
     var detalles = await Dventa.find({venta:id}).populate('producto');
+    var config = await Config.find();
+    var admin = await Admin.find();
 
     var cliente = venta.cliente.nombres+' '+venta.cliente.apellidos;
     var _id = venta._id;
@@ -149,9 +155,9 @@ const enviar_correo_compra_cliente = async function(req, res){
         var htmlToSend = template({op:true});
 
         var mailOptions = {
-            from: 'micuarzo1@gmail.com',
+            from: admin[0].email,
             to: venta.cliente.email,
-            subject: 'Gracias por tu compra, Mi Tienda',
+            subject: 'Gracias por tu compra, En ' + config.titulo,
             html: htmlToSend
         };
         res.status(200).send({data:true});

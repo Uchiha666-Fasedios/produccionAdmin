@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.8.1 (2021-05-20)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -56,12 +56,6 @@
     var isArray = isType('array');
     var isNull = eq(null);
     var isBoolean = isSimpleType('boolean');
-    var isNullable = function (a) {
-      return a === null || a === undefined;
-    };
-    var isNonNullable = function (a) {
-      return !isNullable(a);
-    };
     var isNumber = isSimpleType('number');
 
     var noop = function () {
@@ -180,40 +174,6 @@
       from: from
     };
 
-    var keys = Object.keys;
-    var hasOwnProperty = Object.hasOwnProperty;
-    var each = function (obj, f) {
-      var props = keys(obj);
-      for (var k = 0, len = props.length; k < len; k++) {
-        var i = props[k];
-        var x = obj[i];
-        f(x, i);
-      }
-    };
-    var objAcc = function (r) {
-      return function (x, i) {
-        r[i] = x;
-      };
-    };
-    var internalFilter = function (obj, pred, onTrue, onFalse) {
-      var r = {};
-      each(obj, function (x, i) {
-        (pred(x, i) ? onTrue : onFalse)(x, i);
-      });
-      return r;
-    };
-    var filter = function (obj, pred) {
-      var t = {};
-      internalFilter(obj, pred, objAcc(t), noop);
-      return t;
-    };
-    var has = function (obj, key) {
-      return hasOwnProperty.call(obj, key);
-    };
-    var hasNonNullableKey = function (obj, key) {
-      return has(obj, key) && obj[key] !== undefined && obj[key] !== null;
-    };
-
     var nativePush = Array.prototype.push;
     var flatten = function (xs) {
       var r = [];
@@ -225,11 +185,8 @@
       }
       return r;
     };
-    var get = function (xs, i) {
-      return i >= 0 && i < xs.length ? Optional.some(xs[i]) : Optional.none();
-    };
     var head = function (xs) {
-      return get(xs, 0);
+      return xs.length === 0 ? Optional.none() : Optional.some(xs[0]);
     };
     var findMap = function (arr, f) {
       for (var i = 0; i < arr.length; i++) {
@@ -329,10 +286,22 @@
       return editor.getParam('image_list', false);
     };
     var hasUploadUrl = function (editor) {
-      return isNonNullable(editor.getParam('images_upload_url'));
+      return !!getUploadUrl(editor);
     };
     var hasUploadHandler = function (editor) {
-      return isNonNullable(editor.getParam('images_upload_handler'));
+      return !!getUploadHandler(editor);
+    };
+    var getUploadUrl = function (editor) {
+      return editor.getParam('images_upload_url', '', 'string');
+    };
+    var getUploadHandler = function (editor) {
+      return editor.getParam('images_upload_handler', undefined, 'function');
+    };
+    var getUploadBasePath = function (editor) {
+      return editor.getParam('images_upload_base_path', undefined, 'string');
+    };
+    var getUploadCredentials = function (editor) {
+      return editor.getParam('images_upload_credentials', false, 'boolean');
     };
     var showAccessibilityOptions = function (editor) {
       return editor.getParam('a11y_advanced_options', false, 'boolean');
@@ -730,11 +699,8 @@
     };
     var splitTextBlock = function (editor, figure) {
       var dom = editor.dom;
-      var textBlockElements = filter(editor.schema.getTextBlockElements(), function (_, parentElm) {
-        return !editor.schema.isValidChild(parentElm, 'figure');
-      });
       var textBlock = dom.getParent(figure.parentNode, function (node) {
-        return hasNonNullableKey(textBlockElements, node.nodeName);
+        return !!editor.schema.getTextBlockElements()[node.nodeName];
       }, editor.getBody());
       if (textBlock) {
         return dom.split(textBlock, figure);
@@ -811,16 +777,16 @@
       }
     };
 
-    var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
+    var hasOwnProperty = Object.prototype.hasOwnProperty;
     var deep = function (old, nu) {
       var bothObjects = isObject(old) && isObject(nu);
       return bothObjects ? deepMerge(old, nu) : nu;
     };
     var baseMerge = function (merger) {
       return function () {
-        var objects = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-          objects[_i] = arguments[_i];
+        var objects = new Array(arguments.length);
+        for (var i = 0; i < objects.length; i++) {
+          objects[i] = arguments[i];
         }
         if (objects.length === 0) {
           throw new Error('Can\'t merge zero objects');
@@ -829,7 +795,7 @@
         for (var j = 0; j < objects.length; j++) {
           var curObject = objects[j];
           for (var key in curObject) {
-            if (hasOwnProperty$1.call(curObject, key)) {
+            if (hasOwnProperty.call(curObject, key)) {
               ret[key] = merger(ret[key], curObject[key]);
             }
           }
@@ -839,30 +805,15 @@
     };
     var deepMerge = baseMerge(deep);
 
-    var isNotEmpty = function (s) {
-      return s.length > 0;
-    };
-
-    var global$4 = tinymce.util.Tools.resolve('tinymce.util.ImageUploader');
-
-    var global$5 = tinymce.util.Tools.resolve('tinymce.util.Tools');
+    var global$4 = tinymce.util.Tools.resolve('tinymce.util.Tools');
 
     var getValue = function (item) {
       return isString(item.value) ? item.value : '';
     };
-    var getText = function (item) {
-      if (isString(item.text)) {
-        return item.text;
-      } else if (isString(item.title)) {
-        return item.title;
-      } else {
-        return '';
-      }
-    };
     var sanitizeList = function (list, extractValue) {
       var out = [];
-      global$5.each(list, function (item) {
-        var text = getText(item);
+      global$4.each(list, function (item) {
+        var text = isString(item.text) ? item.text : isString(item.title) ? item.title : '';
         if (item.menu !== undefined) {
           var items = sanitizeList(item.menu, extractValue);
           out.push({
@@ -920,6 +871,61 @@
       sanitize: sanitize,
       findEntry: findEntry
     };
+
+    var pathJoin = function (path1, path2) {
+      if (path1) {
+        return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
+      }
+      return path2;
+    };
+    function Uploader (settings) {
+      var defaultHandler = function (blobInfo, success, failure, progress) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', settings.url);
+        xhr.withCredentials = settings.credentials;
+        xhr.upload.onprogress = function (e) {
+          progress(e.loaded / e.total * 100);
+        };
+        xhr.onerror = function () {
+          failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
+        };
+        xhr.onload = function () {
+          if (xhr.status < 200 || xhr.status >= 300) {
+            failure('HTTP Error: ' + xhr.status);
+            return;
+          }
+          var json = JSON.parse(xhr.responseText);
+          if (!json || typeof json.location !== 'string') {
+            failure('Invalid JSON: ' + xhr.responseText);
+            return;
+          }
+          success(pathJoin(settings.basePath, json.location));
+        };
+        var formData = new FormData();
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
+        xhr.send(formData);
+      };
+      var uploadBlob = function (blobInfo, handler) {
+        return new global$2(function (resolve, reject) {
+          try {
+            handler(blobInfo, resolve, reject, noop);
+          } catch (ex) {
+            reject(ex.message);
+          }
+        });
+      };
+      var isDefaultHandler = function (handler) {
+        return handler === defaultHandler;
+      };
+      var upload = function (blobInfo) {
+        return !settings.url && isDefaultHandler(settings.handler) ? global$2.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
+      };
+      settings = global$4.extend({
+        credentials: false,
+        handler: defaultHandler
+      }, settings);
+      return { upload: upload };
+    }
 
     var makeTab = function (_info) {
       return {
@@ -1039,6 +1045,10 @@
       var hasDimensions$1 = hasDimensions(editor);
       var hasImageCaption$1 = hasImageCaption(editor);
       var hasAccessibilityOptions = showAccessibilityOptions(editor);
+      var url = getUploadUrl(editor);
+      var basePath = getUploadBasePath(editor);
+      var credentials = getUploadCredentials(editor);
+      var handler = getUploadHandler(editor);
       var automaticUploads = isAutomaticUploadsEnabled(editor);
       var prependURL = Optional.some(getPrependUrl(editor)).filter(function (preUrl) {
         return isString(preUrl) && preUrl.length > 0;
@@ -1056,6 +1066,10 @@
           hasImageTitle: hasImageTitle$1,
           hasDimensions: hasDimensions$1,
           hasImageCaption: hasImageCaption$1,
+          url: url,
+          basePath: basePath,
+          credentials: credentials,
+          handler: handler,
           prependURL: prependURL,
           hasAccessibilityOptions: hasAccessibilityOptions,
           automaticUploads: automaticUploads
@@ -1119,12 +1133,6 @@
             label: 'Show caption'
           }]
       };
-      var getDialogContainerType = function (useColumns) {
-        return useColumns ? {
-          type: 'grid',
-          columns: 2
-        } : { type: 'panel' };
-      };
       return flatten([
         [imageUrl],
         imageList.toArray(),
@@ -1132,12 +1140,14 @@
         info.hasDescription ? [imageDescription] : [],
         info.hasImageTitle ? [imageTitle] : [],
         info.hasDimensions ? [imageDimensions] : [],
-        [__assign(__assign({}, getDialogContainerType(info.classList.isSome() && info.hasImageCaption)), {
+        [{
+            type: 'grid',
+            columns: 2,
             items: flatten([
               classList.toArray(),
               info.hasImageCaption ? [caption] : []
             ])
-          })]
+          }]
       ]);
     };
     var makeTab$1 = function (info) {
@@ -1295,22 +1305,11 @@
       var url = data.src.value;
       var meta = data.src.meta || {};
       if (!meta.width && !meta.height && info.hasDimensions) {
-        if (isNotEmpty(url)) {
-          helpers.imageSize(url).then(function (size) {
-            if (state.open) {
-              api.setData({ dimensions: size });
-            }
-          }).catch(function (e) {
-            return console.error(e);
-          });
-        } else {
-          api.setData({
-            dimensions: {
-              width: '',
-              height: ''
-            }
-          });
-        }
+        helpers.imageSize(url).then(function (size) {
+          if (state.open) {
+            api.setData({ dimensions: size });
+          }
+        });
       }
     };
     var updateImagesDropdown = function (info, state, api) {
@@ -1399,6 +1398,12 @@
         api.unblock();
       }, function (file) {
         var blobUri = URL.createObjectURL(file);
+        var uploader = Uploader({
+          url: info.url,
+          basePath: info.basePath,
+          credentials: info.credentials,
+          handler: info.handler
+        });
         var finalize = function () {
           api.unblock();
           URL.revokeObjectURL(blobUri);
@@ -1416,8 +1421,8 @@
         blobToDataUri(file).then(function (dataUrl) {
           var blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
           if (info.automaticUploads) {
-            helpers.uploadImage(blobInfo).then(function (result) {
-              updateSrcAndSwitchTab(result.url);
+            uploader.upload(blobInfo).then(function (url) {
+              updateSrcAndSwitchTab(url);
               finalize();
             }).catch(function (err) {
               finalize();
@@ -1531,7 +1536,6 @@
           blob: file,
           blobUri: blobUri,
           name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null,
-          filename: file.name,
           base64: dataUrl.split(',')[1]
         });
       };
@@ -1561,19 +1565,6 @@
         return editor.dom.serializeStyle(stylesArg, name);
       };
     };
-    var uploadImage = function (editor) {
-      return function (blobInfo) {
-        return global$4(editor).upload([blobInfo], false).then(function (results) {
-          if (results.length === 0) {
-            return global$2.reject('Failed to upload image');
-          } else if (results[0].status === false) {
-            return global$2.reject(results[0].error.message);
-          } else {
-            return results[0];
-          }
-        });
-      };
-    };
     var Dialog = function (editor) {
       var helpers = {
         onSubmit: submitHandler(editor),
@@ -1583,8 +1574,7 @@
         alertErr: alertErr(editor),
         normalizeCss: normalizeCss$1(editor),
         parseStyle: parseStyle(editor),
-        serializeStyle: serializeStyle(editor),
-        uploadImage: uploadImage(editor)
+        serializeStyle: serializeStyle(editor)
       };
       var open = function () {
         collect(editor).then(makeDialog(helpers)).then(editor.windowManager.open);
@@ -1615,7 +1605,7 @@
           var node = nodes[i];
           if (hasImageClass(node)) {
             node.attr('contenteditable', state ? 'false' : null);
-            global$5.each(node.getAll('figcaption'), toggleContentEditable);
+            global$4.each(node.getAll('figcaption'), toggleContentEditable);
           }
         }
       };

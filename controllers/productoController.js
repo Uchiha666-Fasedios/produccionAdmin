@@ -3,11 +3,12 @@
 var Producto = require('../models/producto');
 var Inventario = require('../models/inventario');
 var Review = require('../models/review');
+var Producto_etiqueta = require('../models/Producto_etiqueta');
 var fs = require('fs');//modulo para archivos
 var path = require('path');//modulo para manejar imagenes
 
 
-const registro_producto_admin = async function(req, res){//async define una función asíncrona,
+/*const registro_producto_admin = async function(req, res){//async define una función asíncrona,
 
     if (req.user) {//me llegaria del midelware  el usuario middlewares\authenticate.js
         if (req.user.role == 'admin') {//si es admin paso
@@ -48,6 +49,41 @@ const registro_producto_admin = async function(req, res){//async define una func
 
 
 
+}*/
+
+const registro_producto_admin = async function(req,res){
+    if(req.user){
+        let data = req.body;
+
+        let productos = await Producto.find({titulo:data.titulo});
+        
+        let arr_etiquetas = JSON.parse(data.etiquetas);
+
+        if(productos.length == 0){
+            var img_path = req.files.portada.path;
+            var name = img_path.split('/');
+            var portada_name = name[2];
+
+            data.slug = data.titulo.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
+            data.portada = portada_name;
+            let reg = await Producto.create(data);
+
+            if(arr_etiquetas.length >= 1){
+                for(var item of arr_etiquetas){
+                    await Producto_etiqueta.create({
+                        etiqueta: item.etiqueta,
+                        producto: reg._id,
+                    });
+                }
+            }
+
+            res.status(200).send({data:reg});
+        }else{
+            res.status(200).send({data:undefined, message: 'El título del producto ya existe'});
+        }
+    }else{
+        res.status(500).send({message: 'NoAccess'});
+    }
 }
 
 
@@ -70,6 +106,9 @@ const listar_productos_admin = async function(req, res){//async define una funci
 
 
 }
+
+
+
 
 
 
@@ -121,23 +160,56 @@ const actualizar_producto_admin = async function(req, res){//async define una fu
         if (req.user.role == 'admin') {//si es admin paso
         var id=req.params['id'];
         var data=req.body;//lo q me viene del formulario del body
-
+ 
     if (req.files) {//si hay imagen
-    var img_path = req.files.portada.path;//agarro la ruta junto con su nombre de la imagen
 
+var arr_etiquetas = [];
+arr_etiquetas = JSON.parse(data.etiquetas);//debo hacerlo cuando hay imagenes 
+ let reg2 = await Producto_etiqueta.find({producto:id});
+
+ if (reg2.length == 0) {
+                 if(arr_etiquetas.length > 0){
+                for(var item of arr_etiquetas){
+                    await Producto_etiqueta.create({
+                        etiqueta: item.etiqueta,
+                        producto: id,
+                    });
+                }
+            }
+            }else{
+
+      if(arr_etiquetas.length > 0){
+         for(var item of arr_etiquetas){
+                    await Producto_etiqueta.findOneAndUpdate({producto:id},{//findOneAndUpdate busca con la condicion(q producto sea igual al id) y actualiza
+                        etiqueta: item.etiqueta,
+                        //producto: id,
+                    });
+                }
+            }
+
+            }
+     
+    var img_path = req.files.portada.path;//agarro la ruta junto con su nombre de la imagen
     var name = img_path.split('/');
     var portada_name = name[2];
-
-
-    var reg  = await Producto.findByIdAndUpdate({_id:id},{//findByIdAndUpdate busco por id y lo guarda en reg luego actualiza lo q esta en la llaves
-    titulo:data.titulo,
-    stock:data.stock,
-    precio:data.precio,
-    categoria:data.categoria,
-    descripcion:data.descripcion,
-    contenido:data.contenido,
-    portada:portada_name
-    })//EN REG QEDA LO ANTERIOR
+    
+    let reg = await Producto.findByIdAndUpdate({_id:id},{
+                 titulo: data.titulo,
+               stock: data.stock,
+               precio_antes_soles: data.precio_antes_soles,
+                precio_antes_dolares: data.precio_antes_dolares,
+               precio: data.precio,
+               precio_dolar: data.precio_dolar,
+                peso: data.peso,
+                sku: data.sku,
+               categoria: data.categoria,
+               visibilidad: data.visibilidad,
+               sexo: data.sexo,
+               descripcion: data.descripcion,
+               contenido:data.contenido,
+               slug:data.titulo,
+                portada: portada_name
+            });//EN REG QEDA LO ANTERIOR
 
     //console.log('lo anteriror'+reg);
 
@@ -151,20 +223,54 @@ const actualizar_producto_admin = async function(req, res){//async define una fu
     });
 
 
-
     res.status(200).send({data:reg});
 
     }else{//si no ay imagen
+    var arr_etiquetas = [];
+         arr_etiquetas = data.etiquetas;
+          let reg2 = await Producto_etiqueta.find({producto:id});
+            
+               if (reg2.length == 0) {
+                 if(arr_etiquetas.length > 0){
+                for(var item of arr_etiquetas){
+                    await Producto_etiqueta.create({
+                        etiqueta: item.etiqueta,
+                        producto: id,
+                    });
+                }
+            }
+            }else{
+      if(arr_etiquetas.length > 0){
+         for(var item of arr_etiquetas){
+                    await Producto_etiqueta.findOneAndUpdate({producto:id},{//findOneAndUpdate busca con la condicion(q producto sea igual al id) y actualiza
+                        etiqueta: item.etiqueta,
+                        //producto: id,
+                    });
+                }
+            }
+
+            }
+
+      
     var reg  = await Producto.findByIdAndUpdate({_id:id},{//findByIdAndUpdate busco por id y actualiza
-    titulo:data.titulo,
-    stock:data.stock,
-    precio:data.precio,
-    categoria:data.categoria,
-    descripcion:data.descripcion,
-    contenido:data.contenido
+               titulo: data.titulo,
+               stock: data.stock,
+               precio_antes_soles: data.precio_antes_soles,
+                precio_antes_dolares: data.precio_antes_dolares,
+               precio: data.precio,
+               precio_dolar: data.precio_dolar,
+                peso: data.peso,
+                sku: data.sku,
+               categoria: data.categoria,
+               visibilidad: data.visibilidad,
+               sexo: data.sexo,
+               descripcion: data.descripcion,
+               contenido:data.contenido,
+               slug:data.titulo
 
-    })
+    });
 
+    
     res.status(200).send({data:reg});
     }
 
@@ -410,7 +516,7 @@ res.status(500).send({message:'NoAccess'});
 const listar_productos_public = async function(req, res){//async define una función asíncrona,
                         //let tipo=req.params['tipo'];
                 let filtro=req.params['filtro'];
-                let reg = await Producto.find({titulo:new RegExp(filtro,'i')}).sort({createdAt:-1});//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
+                let reg = await Producto.find({titulo:new RegExp(filtro,'i'),estado:'Publicado'}).sort({createdAt:-1});//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
                res.status(200).send({data:reg});
 
 }
@@ -435,17 +541,24 @@ const listar_productos_recomendados_public = async function(req, res){//async de
 
 const listar_productos_nuevos_public = async function(req, res){//async define una función asíncrona,
                        
-                let reg = await Producto.find().sort({createdAt:-1}).limit(8);//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
+                let reg = await Producto.find({estado:'Publicado'}).sort({createdAt:-1}).limit(8);//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
                res.status(200).send({data:reg});
 
 }
 
 const listar_productos_masvendidos_public = async function(req, res){//async define una función asíncrona,
                        
-                let reg = await Producto.find().sort({nventas:-1}).limit(8);//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
+                let reg = await Producto.find({estado:'Publicado'}).sort({nventas:-1}).limit(8);//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
                res.status(200).send({data:reg});
 
 }
+
+/*const obtener_sexo_productos = async function(req, res){//async define una función asíncrona,
+                       
+                let reg = await Producto.find({sexo:'Woman'});//sort({createdAt:-1}) lo ordena del mas actual ..RegExp permiten describir secuencias de caracteres
+               res.status(200).send({data:reg});
+
+}*/
 
 
 const obtener_reviews_producto_public = async function(req, res){//async define una función asíncrona,
@@ -477,5 +590,6 @@ module.exports = {
     listar_productos_recomendados_public,
     listar_productos_nuevos_public,
     listar_productos_masvendidos_public,
-    obtener_reviews_producto_public 
+    obtener_reviews_producto_public
+    //obtener_sexo_productos 
     }; //para poder importarlo con un reqired

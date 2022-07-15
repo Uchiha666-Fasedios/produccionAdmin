@@ -11,9 +11,9 @@ var path = multipart({ uploadDir: './uploads/configuraciones' }); //aca llamo a 
 
 //router.post('/actualiza_config_admin',auth.auth, configController.actualiza_config_admin);
 router.put('/actualiza_config_admin/:id',[auth.auth,path], configController.actualiza_config_admin);//parametros filtro seria opcional, auth.auth el parametro del token
-router.get('/obtener_config_admin',auth.auth, configController.obtener_config_admin);//parametros filtro seria opcional, auth.auth el parametro del token
+router.get('/obtener_config_admin', configController.obtener_config_admin);//parametros filtro seria opcional, auth.auth el parametro del token
 router.get('/obtener_logo/:img', configController.obtener_logo);
 router.get('/obtener_config_public',configController.obtener_config_public);//parametros filtro seria opcional, auth.auth el parametro del token
-
+router.get('/obtener_variedades_public',configController.obtener_variedades_public);
 
 module.exports = router; //para poder importarlo con un reqired

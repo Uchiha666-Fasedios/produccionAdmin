@@ -5,11 +5,13 @@ var Schema = mongoose.Schema; //vamos a usar el metodo schema
 
 var DireccionSchema = Schema({
     cliente: {type: Schema.ObjectId, ref:'cliente', required: true},
-    destinatario: {type: String, required: true},
-    dni: {type: String, required: true},
-    zip: {type: String, required: true},
+    nombres:{type: String, required: true},
+    apellidos:{type: String, required: true},
+    destinatario: {type: String, required: false},
+    dni: {type: String, required: false},
+    zip: {type: String, required: false},
     direccion: {type: String, required: true},
-    pais: {type: String, required: true},
+    pais: {type: String, required: false},
     region: {type: String, required: false},
     provincia: {type: String, required: false},
     distrito: {type: String, required: false},
