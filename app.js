@@ -4,7 +4,7 @@ var express = require('express'); //cargo el modulo para poder tener el objeto y
 var app = express();
 var bodyParser = require('body-parser'); //cargo el modulo para tener esta libreria para combertir en json lo q me llega por post etc..
 var mongoose = require('mongoose'); //cargo este modulo esta libreria
-var port = process.env.PORT || 4202; //el puerto de mi local host va ser process.env.PORT si no por defecto le ponemos 4201
+var port = process.env.PORT || 4212; //el puerto de mi local host va ser process.env.PORT si no por defecto le ponemos 4201
 //mongoose.set('useFindAndModify', false);//para q no me tire error cuando use findByIdAndUpdate o 
 var path = require('path');
 //CONFIGURAR SOCKET se instalo un paqete para el uso de este socket clase 58 carrito de compras asincrono
@@ -47,7 +47,7 @@ var venta_route = require('./routes/venta'); //llamo al archivo q tiene todas la
 var descuento_route = require('./routes/descuento'); //llamo al archivo q tiene todas las rutas
 
 //mongoose.set('useFindAndModify', false);//para q no me tire error cuando use findByIdAndUpdate o 
-mongoose.connect('mongodb://127.0.0.1:27017/tienda2',{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err,res)=>{////127.0.0.1:27017 es el puerto por defecto de mongo
+mongoose.connect('mongodb://127.0.0.1:27017/sistematienda2',{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err,res)=>{////127.0.0.1:27017 es el puerto por defecto de mongo
 
 
 if (err) {
