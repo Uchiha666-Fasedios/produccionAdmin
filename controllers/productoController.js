@@ -2,6 +2,7 @@
 
 var Producto = require('../models/producto');
 var Inventario = require('../models/inventario');
+var Variedad = require('../models/Variedad');
 var Review = require('../models/review');
 var Producto_etiqueta = require('../models/Producto_etiqueta');
 var fs = require('fs');//modulo para archivos
@@ -296,33 +297,35 @@ arr_etiquetas = JSON.parse(data.etiquetas);//debo hacerlo cuando hay imagenes
 
 const eliminar_producto_admin = async function(req, res){
 
-        if (req.user) {//me llegaria del midelware  el usuario middlewares\authenticate.js
-            if (req.user.role == 'admin') {//si es admin paso
-        var id=req.params['id'];
-        var reg  = await Producto.findByIdAndRemove({_id:id});//findByIdAndRemove busco por id y elimino
+    if (req.user) {//me llegaria del midelware  el usuario middlewares\authenticate.js
+        if (req.user.role == 'admin') {//si es admin paso
+    var id=req.params['id'];
+    var reg  = await Producto.findByIdAndRemove({_id:id});//findByIdAndRemove busco por id y elimino
+   
+    //EN REG QEDA LO ANTERIOR
+    //console.log('lo anteriror'+reg);
 
-        //EN REG QEDA LO ANTERIOR
-        //console.log('lo anteriror'+reg);
+    //obtener portada e iliminarla
+    fs.stat('./uploads/productos/'+reg.portada,function(err){//stat metodo del modulo..obtengo la portada o sea la imagen del backend donde esta uploads
+    if (!err) {//si no ay error o se si ay imagen
+    fs.unlink('./uploads/productos/'+reg.portada,(err)=>{//la elimino
+        if(err) throw err;
+    });  
+    }  
+    });
 
-        //obtener portada e iliminarla
-        fs.stat('./uploads/productos/'+reg.portada,function(err){//stat metodo del modulo..obtengo la portada o sea la imagen del backend donde esta uploads
-        if (!err) {//si no ay error o se si ay imagen
-        fs.unlink('./uploads/productos/'+reg.portada,(err)=>{//la elimino
-            if(err) throw err;
-        });  
-        }  
-        });
+    let vari = await Variedad.remove({producto:id});
+    let inve = await Inventario.remove({producto:id});
+    let prod_etiq = await Producto_etiqueta.remove({producto:id});
 
-
-
-        res.status(200).send({data:reg});
-                        
-            }else{
-        res.status(500).send({message:'NoAccess'}); 
-            }
+    res.status(200).send({data:reg});
+                    
         }else{
-        res.status(500).send({message:'NoAccess'}); 
+    res.status(500).send({message:'NoAccess'}); 
         }
+    }else{
+    res.status(500).send({message:'NoAccess'}); 
+    }
 
 }
 
