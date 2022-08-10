@@ -165,6 +165,9 @@ MIT
 ng-starrating
 MIT
 
+ngx-paypal
+MIT
+
 parseqs
 MIT
 The MIT License (MIT)

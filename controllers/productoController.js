@@ -571,7 +571,11 @@ const obtener_reviews_producto_public = async function(req, res){//async define 
 
 }
 
-
+const listar_etiquetas_publico = async function(req,res){
+    
+    var reg = await Etiqueta.find();
+    res.status(200).send({data:reg});
+}
 
 
 
@@ -593,6 +597,7 @@ module.exports = {
     listar_productos_recomendados_public,
     listar_productos_nuevos_public,
     listar_productos_masvendidos_public,
-    obtener_reviews_producto_public
+    obtener_reviews_producto_public,
+    listar_etiquetas_publico
     //obtener_sexo_productos 
     }; //para poder importarlo con un reqired
