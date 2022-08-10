@@ -2,6 +2,7 @@
 
 var Producto = require('../models/producto');
 var Inventario = require('../models/inventario');
+var Etiqueta = require('../models/Etiqueta');
 var Variedad = require('../models/Variedad');
 var Review = require('../models/review');
 var Producto_etiqueta = require('../models/Producto_etiqueta');

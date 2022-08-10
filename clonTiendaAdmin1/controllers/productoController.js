@@ -1,6 +1,7 @@
 'use strict'
 
 var Producto = require('../models/producto');
+var Etiqueta = require('../models/Etiqueta');
 var Inventario = require('../models/inventario');
 var Variedad = require('../models/Variedad');
 var Review = require('../models/review');
