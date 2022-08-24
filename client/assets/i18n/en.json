@@ -208,6 +208,7 @@
     "perfil.item_cincuentauno": "Shipping and Exchange Policy",
     "perfil.item_cincuentados": "Payment confirmation could not be confirmed",
     "perfil.item_cincuentatres": "This is a payment confirmation window, if you want to return to",
+    "perfil.item_max": "Write a maximum of 10 characters (only letters and numbers)",
 
     "checkout.item_uno": "Addressee",
     "checkout.item_dos": "Identification document",

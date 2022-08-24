@@ -34,7 +34,7 @@
     "perfil.Admin": "Admin",
     "perfil.Admin2": "Este modulo lista al administrador del sistema",
     "perfil.Admin3": "Actualizar perfil",
-    
+    "perfil.item_max": "Escribe un maximo de 10 caracteres (solo letras y números)",
     
     "inicio.item_uno":"Futbolera",
     "inicio.item_dos":"Prendas futboleras",

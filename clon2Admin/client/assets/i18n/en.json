@@ -35,6 +35,7 @@
     "perfil.Admin": "Admin",
     "perfil.Admin2": "This module lists the system administrator",
     "perfil.Admin3": "Update profile",
+    "perfil.item_max": "Write a maximum of 10 characters (only letters and numbers)",
 
     "inicio.item_uno":"Football",
     "inicio.item_dos":"Football clothing",

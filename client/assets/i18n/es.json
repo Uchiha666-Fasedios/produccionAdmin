@@ -210,6 +210,7 @@
     "perfil.item_cincuentauno": "Política de envío y cambio",
     "perfil.item_cincuentados": "La confirmación del pago no se pudo concretar",
     "perfil.item_cincuentatres": "Esta es una ventana de confirmacion de pago, si deseas regresar al",
+    "perfil.item_max": "Escribe un maximo de 10 caracteres (solo letras y números)",
 
     "checkout.item_uno": "Destinatario",
     "checkout.item_dos": "Documento de Identidad",
